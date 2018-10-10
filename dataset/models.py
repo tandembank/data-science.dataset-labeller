@@ -23,7 +23,7 @@ class DatasetManager(models.Manager):
         # Create the Dataset object
         ds = self.create(name=name, columns=columns, display_columns=display_columns, min_user_labels=min_user_labels)
 
-        # Add a datapoint for each row
+        # Add a Datapoint for each row
         for i, row in enumerate(data):
             Datapoint(dataset=ds, index=i, data=json.dumps(row, sort_keys=True)).save()
 
@@ -31,11 +31,11 @@ class DatasetManager(models.Manager):
 
 
 class Dataset(models.Model):
-    name = models.CharField(max_length=200)
-    columns = models.TextField()
+    name            = models.CharField(max_length=200)
+    columns         = models.TextField()
     display_columns = models.TextField()
     min_user_labels = models.IntegerField()
-    objects = DatasetManager()
+    objects         = DatasetManager()
 
     def __str__(self):
         return self.name
@@ -48,8 +48,8 @@ class Dataset(models.Model):
 
 class Datapoint(models.Model):
     dataset = models.ForeignKey(Dataset, on_delete='CASCADE', related_name='datapoints')
-    index = models.IntegerField()
-    data = models.TextField()
+    index   = models.IntegerField()
+    data    = models.TextField()
 
     def __str__(self):
         return '{}: {}: {}'.format(self.dataset.name, self.index, self.data)
@@ -57,7 +57,7 @@ class Datapoint(models.Model):
 
 class Label(models.Model):
     dataset = models.ForeignKey(Dataset, on_delete='CASCADE', related_name='labels')
-    name = models.CharField(max_length=200)
+    name    = models.CharField(max_length=200)
 
     unique_together = (('dataset', 'name'),)
 
@@ -66,8 +66,9 @@ class Label(models.Model):
 
 
 class UserLabel(models.Model):
-    user = models.ForeignKey(User, on_delete='CASCADE')
-    label = models.ForeignKey(Label, on_delete='CASCADE')
+    user        = models.ForeignKey(User, on_delete='CASCADE')
+    datapoint   = models.ForeignKey(Datapoint, on_delete='CASCADE', related_name='user_labels')
+    label       = models.ForeignKey(Label, on_delete='CASCADE')
 
     def __str__(self):
-        return '{}: {}'.format(self.user.username, self.label)
+        return '{}: {}: {}'.format(self.user.username, self.label, self.datapoint)
