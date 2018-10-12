@@ -1,0 +1,24 @@
+.Login {
+}
+
+.Login ul {
+    margin: 0;
+    padding: 30px;
+    list-style: none;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.Login li {
+    margin-bottom: 10px 
+}
+
+.Login label {
+    width: 6em;
+    display: inline-block;
+    text-align: left;
+}
+
+.Login .Submit {
+    margin: 0;
+    text-align: right;
+}
