@@ -1,28 +1,27 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import LoginContainer from "../containers/LoginContainer";
-import spinner from '../images/spinner.svg';
-import './App.css';
+import React, { Component } from 'react'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import LoginContainer from '../containers/LoginContainer'
+import spinner from '../images/spinner.svg'
+import './App.css'
 
 
-function content(loggedIn) {
-  console.log(loggedIn)
-  if (loggedIn == null) {
+function content(params) {
+  if (params.loggedIn == null) {
     return <img src={spinner} className="App-logo" alt=" " />
   }
-  else if (!loggedIn) {
-    return <LoginContainer />
+  else if (!params.loggedIn) {
+    return <LoginContainer onLoggedIn={params.onLoggedIn} />
   }
   else {
     return <div>You are logged in</div>
   }
 }
 
-const App = (data) => (
+const App = (params) => (
   <Router>
     <div className="App">
       <header className="App-header">
-        {content(data.loggedIn)}
+        {content(params)}
       </header>
 
       <ul>
@@ -44,19 +43,19 @@ const App = (data) => (
       <Route path="/topics" component={Topics} />
     </div>
   </Router>
-);
+)
 
 const Home = () => (
   <div>
     <h2>Home</h2>
   </div>
-);
+)
 
 const About = () => (
   <div>
     <h2>About</h2>
   </div>
-);
+)
 
 const Topics = ({ match }) => (
   <div>
@@ -80,12 +79,12 @@ const Topics = ({ match }) => (
       render={() => <h3>Please select a topic.</h3>}
     />
   </div>
-);
+)
 
 const Topic = ({ match }) => (
   <div>
     <h3>{match.params.topicId}</h3>
   </div>
-);
+)
 
-export default App;
+export default App

@@ -2,19 +2,21 @@ import React from "react";
 import './Login.css';
 
 
-const Login = errors => (
+const Login = params => (
   <div className="Login">
-    <ul>
-      <li>
-        <label>Username</label><input type="text"></input>
-      </li>
-      <li>
-        <label>Password</label><input type="password"></input>
-      </li>
-      <li className="Submit">
-        <input type="submit" />
-      </li>
-    </ul>
+    <form>
+      <ul>
+        <li>
+          <label>Username</label><input type="text" onChange={(e) => params.onChange('username', e.target.value)}></input>
+        </li>
+        <li>
+          <label>Password</label><input type="password" onChange={(e) => params.onChange('password', e.target.value)}></input>
+        </li>
+        <li className="Submit">
+          <button onClick={(e) => params.onSubmit(e)}>Submit</button>
+        </li>
+      </ul>
+    </form>
   </div>
 )
 
