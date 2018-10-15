@@ -7,7 +7,7 @@ const Login = params => (
     <form>
       <ul>
         <li>
-          <label>Username</label><input type="text" onChange={(e) => params.onChange('username', e.target.value)}></input>
+          <label>Username</label><input type="text" onChange={(e) => params.onChange('username', e.target.value)} ref={params.usernameFieldRef}></input>
         </li>
         <li>
           <label>Password</label><input type="password" onChange={(e) => params.onChange('password', e.target.value)}></input>

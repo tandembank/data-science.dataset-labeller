@@ -15,9 +15,12 @@ export default class LoginContainer extends React.Component {
         password: '',
       }
     }
+    this.usernameFieldRef = React.createRef()
   }
 
   componentDidMount() {
+    this.usernameFieldRef.current.focus()
+
     fetch('/api/csrf-token/')
     .then((response) => {
       if (response.ok) {
@@ -73,7 +76,7 @@ export default class LoginContainer extends React.Component {
   
   render() {
     if (this.state.ready) {
-      return <Login errors={this.state.errors} onChange={(key, val) => this.onChange(key, val)} onSubmit={(e) => this.onSubmit(e)} />
+      return <Login errors={this.state.errors} onChange={(key, val) => this.onChange(key, val)} onSubmit={(e) => this.onSubmit(e)} usernameFieldRef={this.usernameFieldRef} />
     }
     else {
       return <Spinner />
