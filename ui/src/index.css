@@ -6,9 +6,22 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #282c34;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+table {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+}
+td {
+  text-align: left;
+  padding: 10px;
+}
+th {
+  padding: 10px;
 }

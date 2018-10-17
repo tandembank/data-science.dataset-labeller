@@ -33,7 +33,7 @@ class DatasetManager(models.Manager):
 
 
 class Dataset(models.Model):
-    name            = models.CharField(max_length=200)
+    name            = models.CharField(max_length=200, unique=True)
     columns         = models.TextField()
     display_columns = models.TextField()
     num_user_labels = models.IntegerField()
