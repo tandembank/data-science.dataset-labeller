@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import LoginContainer from '../containers/LoginContainer'
+import Dataset from '../components/Dataset'
 import spinner from '../images/spinner.svg'
 import './App.css'
 
@@ -13,7 +14,7 @@ function content(params) {
     return <LoginContainer onLoggedIn={params.onLoggedIn} />
   }
   else {
-    return <div>You are logged in</div>
+    return <Dataset percentComplete={66.6} name="Fruit" createdBy="Damian" createdAt="17/10/2018" numDatapoints="5000" numLabels="2" numUserLabels="3" />
   }
 }
 

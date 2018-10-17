@@ -1,0 +1,55 @@
+.Dataset {
+  background: rgba(255, 255, 255, 0.05);
+  width: 90%;
+  padding: 20px;
+  display: flex;
+}
+.Dataset > div {
+  margin: 0 10px;
+}
+
+.Dataset .donut {
+  width: 64px;
+  height: 64px;
+  float: left;
+  margin: 0;
+}
+
+.Dataset .title {
+  width: 200px;
+  float: left;
+  text-align: left;
+  margin-left: 20px;
+}
+.Dataset .title .name {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.Dataset .title .createdBy {
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.Dataset .numDatapoints, .Dataset .numUserLabels {
+  flex-grow: 1;
+}
+
+.Dataset .numberLarge {
+  font-size: 22px;
+  margin: 8px 0 5px 0;
+}
+.Dataset .description {
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.Dataset .controls .icon {
+  margin-left: 20px;
+}
+.Dataset .iconEdit {
+  mask-image: url(../images/edit.svg);
+}
+.Dataset .iconLabel {
+  mask-image: url(../images/local_offer.svg);
+}
