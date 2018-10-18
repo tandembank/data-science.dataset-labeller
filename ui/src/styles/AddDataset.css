@@ -11,6 +11,17 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  margin: -20px;
+  padding: 20px;
+}
+.AddDataset .startAction:hover .addText {
+  color: rgba(255, 255, 255, 1);
+}
+.AddDataset .startAction:hover .icon {
+  background-color: rgba(255, 255, 255, 1);
+}
+.AddDataset .startAction .addText {
+  color: rgba(255, 255, 255, 0.5);
 }
 .AddDataset .startAction > div {
   margin: 0 10px;
@@ -19,6 +30,10 @@
 .AddDataset .iconAdd {
   mask-image: url(../images/add_circle_outline.svg);
 }
+.AddDataset .iconUpload {
+  mask-image: url(../images/cloud_upload.svg);
+  margin-bottom: 10px;
+}
 .AddDataset .iconClose {
   mask-image: url(../images/close.svg);
   cursor: pointer;
@@ -26,8 +41,12 @@
   top: -10px;
   right: -10px;
 }
+.AddDataset .iconClose:hover {
+  background: rgba(255, 255, 255, 1);
+}
 .AddDataset .iconCheck {
   mask-image: url(../images/check_box_outline_blank.svg);
+  background: rgba(255, 255, 255, 0.2);
   vertical-align: -6px;
   margin-right: 10px;
 }
@@ -47,6 +66,12 @@
   cursor: pointer;
   color: rgba(255, 255, 255, 0.5);
 }
+.AddDataset .createDataset .dropzone:hover {
+  color: #fff;
+}
+.AddDataset .createDataset .dropzone:hover .icon {
+  background-color: #fff;
+}
 .AddDataset .createDataset .pickFields li {
   list-style: none;
   cursor: pointer;
@@ -61,4 +86,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   display: inline-block;
+  vertical-align: -3px;
+}
+
+.AddDataset .createDataset .pickFields li:hover .icon {
+  background-color: #fff;
 }

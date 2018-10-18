@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import LoginContainer from '../containers/LoginContainer'
 import Dataset from '../components/Dataset'
 import AddDataset from '../components/AddDataset'
+import Labeller from '../components/Labeller'
 import spinner from '../images/spinner.svg'
+import logo from '../images/logo.svg'
 import '../styles/App.css'
 
 
@@ -21,6 +23,7 @@ function content(params) {
         <AddDataset />
         <AddDataset started={true} />
         <AddDataset started={true} csvUploaded={true} />
+        <Labeller />
       </div>
     )
   }
@@ -29,6 +32,8 @@ function content(params) {
 const App = (params) => (
   <Router>
     <div className="App">
+      <img src={logo} className="App-logo" alt=" " />
+
       <div className="App-content">
         {content(params)}
       </div>

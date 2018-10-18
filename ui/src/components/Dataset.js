@@ -25,8 +25,9 @@ const Dataset = params => (
       <div className="description">Labels per datapoint</div>
     </div>
     <div className="controls">
-      <span className="icon iconEdit" />
-      <span className="icon iconLabel" />
+      <span className="icon iconEdit" title="Edit" />
+      <span className="icon iconDownload" title="Download" />
+      <span className="icon iconLabel" title="Label data" />
     </div>
   </div>
 )

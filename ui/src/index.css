@@ -44,12 +44,16 @@ button {
   border-radius: 3px;
   box-shadow: 1px 1px 6px rgba(0,0,0,0.1);
 }
+button:hover {
+  background: #1ac6b0;
+  background: linear-gradient(to top, #2aead1 0%, #1ac6b0 100%);
+}
 
 .icon {
   width: 24px;
   height: 24px;
   display: inline-block;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.5);
   mask: no-repeat center;
 }
 .buttonBar {
