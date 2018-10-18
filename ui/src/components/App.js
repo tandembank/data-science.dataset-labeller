@@ -2,8 +2,9 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import LoginContainer from '../containers/LoginContainer'
 import Dataset from '../components/Dataset'
+import AddDataset from '../components/AddDataset'
 import spinner from '../images/spinner.svg'
-import './App.css'
+import '../styles/App.css'
 
 
 function content(params) {
@@ -14,16 +15,23 @@ function content(params) {
     return <LoginContainer onLoggedIn={params.onLoggedIn} />
   }
   else {
-    return <Dataset percentComplete={66.6} name="Fruit" createdBy="Damian" createdAt="17/10/2018" numDatapoints="5000" numLabels="2" numUserLabels="3" />
+    return (
+      <div>
+        <Dataset percentComplete={66.6} name="Fruit" createdBy="Damian" createdAt="17/10/2018" numDatapoints="5000" numLabels="2" numUserLabels="3" />
+        <AddDataset />
+        <AddDataset started={true} />
+        <AddDataset started={true} csvUploaded={true} />
+      </div>
+    )
   }
 }
 
 const App = (params) => (
   <Router>
     <div className="App">
-      <header className="App-header">
+      <div className="App-content">
         {content(params)}
-      </header>
+      </div>
 
       <ul>
         <li>

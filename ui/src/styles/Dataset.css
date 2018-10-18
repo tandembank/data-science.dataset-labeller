@@ -1,8 +1,8 @@
 .Dataset {
   background: rgba(255, 255, 255, 0.05);
-  width: 90%;
   padding: 20px;
   display: flex;
+  margin-bottom: 40px;
 }
 .Dataset > div {
   margin: 0 10px;
@@ -29,6 +29,7 @@
 .Dataset .title .createdBy {
   font-size: 10px;
   line-height: 1.4;
+  color: rgba(255,255,255,0.5);
 }
 
 .Dataset .numDatapoints, .Dataset .numUserLabels {
@@ -37,15 +38,23 @@
 
 .Dataset .numberLarge {
   font-size: 22px;
-  margin: 8px 0 5px 0;
+  margin: 10px 0 4px 0;
+  text-align: center;
 }
 .Dataset .description {
   font-size: 10px;
   line-height: 1.4;
+  color: rgba(255,255,255,0.5);
+  text-align: center;
 }
 
+.Dataset .controls {
+  flex-shrink: 0;
+  margin-right: 0;
+}
 .Dataset .controls .icon {
   margin-left: 20px;
+  cursor: pointer;
 }
 .Dataset .iconEdit {
   mask-image: url(../images/edit.svg);

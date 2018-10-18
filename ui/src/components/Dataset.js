@@ -1,6 +1,6 @@
 import React from 'react'
 import Donut from '../components/Donut'
-import './Dataset.css'
+import '../styles/Dataset.css'
 
 
 const Dataset = params => (

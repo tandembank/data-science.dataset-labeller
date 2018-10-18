@@ -1,0 +1,64 @@
+.AddDataset {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  margin-bottom: 40px;
+  justify-content: center;
+  align-items: center;
+}
+
+.AddDataset .startAction {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.AddDataset .startAction > div {
+  margin: 0 10px;
+}
+
+.AddDataset .iconAdd {
+  mask-image: url(../images/add_circle_outline.svg);
+}
+.AddDataset .iconClose {
+  mask-image: url(../images/close.svg);
+  cursor: pointer;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+}
+.AddDataset .iconCheck {
+  mask-image: url(../images/check_box_outline_blank.svg);
+  vertical-align: -6px;
+  margin-right: 10px;
+}
+
+.AddDataset .createDataset {
+  position: relative;
+}
+.AddDataset .createDataset > div {
+  position: relative;
+  padding-top: 1px;
+}
+.AddDataset .createDataset .dropzone {
+  background: rgba(255, 255, 255, 0.05);
+  text-align: center;
+  padding: 60px;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+}
+.AddDataset .createDataset .pickFields li {
+  list-style: none;
+  cursor: pointer;
+}
+.AddDataset .createDataset .pickFields li .example {
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+  margin-left: 10px;
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+}
