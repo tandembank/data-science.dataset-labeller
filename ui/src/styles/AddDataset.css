@@ -40,13 +40,20 @@
   position: absolute;
   top: -10px;
   right: -10px;
+  z-index: 1;
 }
 .AddDataset .iconClose:hover {
   background: rgba(255, 255, 255, 1);
 }
 .AddDataset .iconCheck {
   mask-image: url(../images/check_box_outline_blank.svg);
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.5);
+  vertical-align: -6px;
+  margin-right: 10px;
+}
+.AddDataset .iconChecked {
+  mask-image: url(../images/check_box.svg);
+  background: rgba(255, 255, 255, 1);
   vertical-align: -6px;
   margin-right: 10px;
 }
@@ -74,6 +81,9 @@
 }
 .AddDataset .createDataset .pickFields li {
   list-style: none;
+  margin-bottom: 10px;
+}
+.AddDataset .createDataset .pickFields li .clickArea {
   cursor: pointer;
 }
 .AddDataset .createDataset .pickFields li .example {
@@ -89,6 +99,22 @@
   vertical-align: -3px;
 }
 
-.AddDataset .createDataset .pickFields li:hover .icon {
+.AddDataset .createDataset .pickFields li .clickArea:hover .icon {
   background-color: #fff;
+}
+
+.AddDataset .createDataset .pickFields li .shortcut {
+  margin: 5px 0 0 45px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+}
+.AddDataset .createDataset .pickFields li .shortcut input {
+  width: 1em;
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-left: 5px;
+  border-radius: 1px;
+  border: 0;
+  padding: 2px;
 }

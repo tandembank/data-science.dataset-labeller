@@ -1,9 +1,9 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import LoginContainer from '../containers/LoginContainer'
-import Dataset from '../components/Dataset'
-import AddDataset from '../components/AddDataset'
-import Labeller from '../components/Labeller'
+import DatasetContainer from '../containers/DatasetContainer'
+import AddDatasetContainer from '../containers/AddDatasetContainer'
+import LabellerContainer from '../containers/LabellerContainer'
 import spinner from '../images/spinner.svg'
 import logo from '../images/logo.svg'
 import '../styles/App.css'
@@ -19,11 +19,11 @@ function content(params) {
   else {
     return (
       <div>
-        <Dataset percentComplete={66.6} name="Fruit" createdBy="Damian" createdAt="17/10/2018" numDatapoints="5000" numLabels="2" numUserLabels="3" />
-        <AddDataset />
-        <AddDataset started={true} />
-        <AddDataset started={true} csvUploaded={true} />
-        <Labeller />
+        <DatasetContainer percentComplete={66.6} name="Fruit" createdBy="Damian" createdAt="17/10/2018" numDatapoints="5000" numLabels="2" numUserLabels="3" />
+        <AddDatasetContainer />
+        <AddDatasetContainer started={true} />
+        <AddDatasetContainer started={true} csvUploaded={true} />
+        <LabellerContainer />
       </div>
     )
   }
@@ -34,11 +34,7 @@ const App = (params) => (
     <div className="App">
       <img src={logo} className="App-logo" alt=" " />
 
-      <div className="App-content">
-        {content(params)}
-      </div>
-
-      <ul>
+      {/* <ul>
         <li>
           <Link to="/">Home</Link>
         </li>
@@ -48,20 +44,23 @@ const App = (params) => (
         <li>
           <Link to="/topics">Topics</Link>
         </li>
-      </ul>
-
-      <hr />
+      </ul> */}
 
       <Route exact path="/" component={Home} />
+      <Route path="/components" component={Components} />
       <Route path="/about" component={About} />
       <Route path="/topics" component={Topics} />
     </div>
   </Router>
 )
 
-const Home = () => (
+const Home = (params) => (
   <div>
     <h2>Home</h2>
+    <img src={spinner} className="App-logo" alt=" " />
+    <div className="App-content">
+      {content(params)}
+    </div>
   </div>
 )
 
@@ -98,6 +97,32 @@ const Topics = ({ match }) => (
 const Topic = ({ match }) => (
   <div>
     <h3>{match.params.topicId}</h3>
+  </div>
+)
+
+const Components = ({ match }) => (
+  <div className="App-content">
+    <div>
+      <DatasetContainer percentComplete={66.6} name="Fruit" createdBy="Damian" createdAt="17/10/2018" numDatapoints="5000" numLabels="2" numUserLabels="3" />
+      <AddDatasetContainer />
+      <AddDatasetContainer started={true} />
+      <AddDatasetContainer started={true} csvUploaded={true} data={[
+        {name: 'message_id', sample: '252956', selected: false, shortcut: null},
+        {name: 'date', sample: '2018-10-22', selected: true, shortcut: 'D'},
+        {name: 'conversation', sample: '<p>Hi, I have a question about my card.</p>', selected: false, shortcut: null},
+      ]} />
+      <LabellerContainer
+        data={[
+          {key: 'shape', value: 'round'},
+          {key: 'color', value: 'green'},
+          {key: 'texture', value: 'smooth'},
+        ]}
+        labels={[
+          {id: 1, key: '1', name: 'Apple'},
+          {id: 2, key: '2', name: 'Orange'},
+          {id: 3, key: '3', name: 'Pear'},
+        ]} />
+    </div>
   </div>
 )
 

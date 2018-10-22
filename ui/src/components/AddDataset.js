@@ -15,12 +15,12 @@ function startAction() {
   )
 }
 
-function createDataset(csvUploaded) {
+function createDataset(csvUploaded, data) {
   return (
     <div className="createDataset">
       <span className="icon iconClose" />
       <div>
-        { csvUploaded ? pickFields() : uploadCSV() }
+        { csvUploaded ? pickFields(data) : uploadCSV() }
       </div>
     </div>
   )
@@ -42,14 +42,26 @@ function uploadCSV() {
   )
 }
 
-function pickFields() {
+function field(item) {
+  let shortcutField = <div className="shortcut">Shortcut key: <input type="text"></input></div>
+  return (
+    <li>
+      <span className="clickArea">
+        <span className={item.selected ? `icon iconChecked` : `icon iconCheck`} />
+        <span className="name">{item.name}</span>
+      </span>
+      <span className="example">sample: {item.sample}</span>
+      {item.selected ? shortcutField : null}
+    </li>
+  )
+}
+
+function pickFields(data) {
   return (
     <div>
       <p>Pick fields to display for labelling</p>
       <ul className="pickFields">
-        <li><span className="icon iconCheck" />message_id<span className="example">sample: 152490</span></li>
-        <li><span className="icon iconCheck" />date<span className="example">sample: 2018-10-18</span></li>
-        <li><span className="icon iconCheck" />conversation<span className="example">sample: &lt;p&gt;Hi, I have a question about my card.</span></li>
+        {data.map((item) => field(item))}
       </ul>
       <div className="buttonBar">
         <button>Create dataset</button>
@@ -60,7 +72,7 @@ function pickFields() {
 
 const AddDataset = params => (
   <div className="AddDataset">
-    { params.started ? createDataset(params.csvUploaded) : startAction(false) }
+    { params.started ? createDataset(params.csvUploaded, params.data) : startAction(false) }
   </div>
 )
 
