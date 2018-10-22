@@ -7,14 +7,24 @@ const Labeller = params => (
     <div className="card">
         {
           params.data.map((item) => {
-            return <div><span className="key">{item.key}:</span><div className="value">{item.value}</div></div>
+            return (
+              <div key={Math.random()}>
+                <span className="key">{item.key}:</span>
+                <div className="value">{item.value}</div>
+              </div>
+            )
           })
         }
     </div>
     <ul className="options">
       {
         params.labels.map((label) => {
-          return <li><span className="key">{label.key}</span><span className="name">{label.name}</span></li>
+          return (
+            <li key={Math.random()}>
+              <span className="key">{label.key}</span>
+              <span className="name">{label.name}</span>
+            </li>
+          )
         })
       }
     </ul>

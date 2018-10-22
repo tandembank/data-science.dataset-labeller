@@ -65,6 +65,7 @@
   position: relative;
   padding-top: 1px;
 }
+
 .AddDataset .createDataset .dropzone {
   background: rgba(255, 255, 255, 0.05);
   text-align: center;
@@ -79,6 +80,30 @@
 .AddDataset .createDataset .dropzone:hover .icon {
   background-color: #fff;
 }
+.AddDataset .createDataset .dropzoneActive {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+.AddDataset .createDataset .dropzoneActive .icon {
+  background-color: #fff;
+}
+.AddDataset .createDataset .uploading {
+  text-align: center
+}
+.AddDataset .createDataset .uploading img {
+  margin-bottom: 20px;
+}
+.AddDataset .createDataset .uploading p {
+  margin-bottom: 0;
+}
+.AddDataset .createDataset .error {
+  color: #fff;
+  padding: 10px;
+  background: rgba(255,0,25,0.3);
+  text-align: center;
+  font-size: 14px;
+}
+
 .AddDataset .createDataset .pickFields li {
   list-style: none;
   margin-bottom: 10px;

@@ -103,7 +103,7 @@ const Topic = ({ match }) => (
 const Components = ({ match }) => (
   <div className="App-content">
     <div>
-      <DatasetContainer percentComplete={66.6} name="Fruit" createdBy="Damian" createdAt="17/10/2018" numDatapoints="5000" numLabels="2" numUserLabels="3" />
+      <DatasetContainer percentComplete={62.5} name="Fruit" createdBy="Damian" createdAt="17/10/2018" numDatapoints="5000" numLabels="2" numUserLabels="3" />
       <AddDatasetContainer />
       <AddDatasetContainer started={true} />
       <AddDatasetContainer started={true} csvUploaded={true} data={[

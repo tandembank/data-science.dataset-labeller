@@ -1,10 +1,9 @@
 import spinner from '../images/spinner.svg'
 import React from 'react'
-// import './Login.css'
 
 
 const Spinner = params => (
-  <img src={spinner} className="App-logo" alt=" " />
+  <img src={spinner} className="Spinner" alt=" " />
 )
 
 export default Spinner

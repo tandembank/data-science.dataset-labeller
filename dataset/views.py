@@ -1,3 +1,4 @@
+import csv
 import json
 
 from django.http import HttpResponse, JsonResponse
@@ -39,4 +40,17 @@ def datasets(request):
         'datasets': datasets,
         'count': Dataset.objects.count()
     }
+    return JsonResponse(data)
+
+
+def csv_upload(request):
+    file = request.FILES['file']
+    reader = csv.DictReader(file.read().decode('utf-8'))
+    fields = reader.fieldnames
+    if fields:
+        data = {
+            'status': 'OK',
+            'path': file.temporary_file_path(),
+            'fields': fields,
+        }
     return JsonResponse(data)
