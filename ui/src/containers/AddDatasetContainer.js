@@ -13,33 +13,29 @@ export default class AddDatasetContainer extends React.Component {
       uploading: false,
       uploadError: null,
     }
-    this.onClose = this.onClose.bind(this)
-    this.onStart = this.onStart.bind(this)
-    this.onDrop = this.onDrop.bind(this)
-    this.onFieldToggle = this.onFieldToggle.bind(this)
-    this.onShortcutChange = this.onShortcutChange.bind(this)
-    // this.upload = this.upload.bind(this)
   }
 
   componentDidMount() {
-    fetch('/api/csrf-token/')
-    .then((response) => {
+    this.fetchCsrfToken()
+  }
+
+  fetchCsrfToken = async () => {
+    try {
+      const response = await fetch('/api/csrf-token/')
       if (response.ok) {
-        return response.json()
+        let responseBody = await response.json()
+        this.setState({csrftoken: responseBody.csrftoken})
       }
       else {
         throw new Error('Post Failed')
       }
-    })
-    .then((responseBody) => {
-      this.setState({csrftoken: responseBody.csrftoken})
-    })
-    .catch((error) => {
+    }
+    catch(error) {
       console.log('Request failed', error)
-    })
+    }
   }
 
-  onClose() {
+  onClose = () => {
     this.setState({
       started: false,
       csvUploaded: false,
@@ -47,7 +43,7 @@ export default class AddDatasetContainer extends React.Component {
     })
   }
 
-  onStart() {
+  onStart = () => {
     this.setState({
       started: true,
       uploading: false,
@@ -56,7 +52,7 @@ export default class AddDatasetContainer extends React.Component {
     })
   }
 
-  onDrop(acceptedFiles, rejectedFiles) {
+  onDrop = (acceptedFiles, rejectedFiles) => {
     if (acceptedFiles.length === 1 && rejectedFiles.length === 0) {
       this.setState({
         uploading: true,
@@ -71,43 +67,44 @@ export default class AddDatasetContainer extends React.Component {
     }
   }
 
-  upload (file) {
+  upload = async (file) => {
     let formData = new FormData()
     formData.append('file', file)
     formData.append('csrfmiddlewaretoken', this.state.csrftoken)
 
-    fetch('/api/csv-upload/', {
-      method: 'post',
-      body: formData,
-    })
-    .then((response) => {
+    try {
+      const response = await fetch('/api/csv-upload/', {
+        method: 'post',
+        body: formData,
+      })
       if (response.ok) {
-        return response.json()
+        const responseBody = await response.json()
+
+        let data = responseBody.fields.map((item, index) => {
+          return {
+            name: item,
+            sample: '',
+            selected: false,
+            shortcut: null,
+          }
+        })
+
+        this.setState({
+          uploading: false,
+          csvUploaded: true,
+          data: data,
+        })
       }
       else {
         throw new Error('Post Failed')
       }
-    })
-    .then((responseBody) => {
-      let data = responseBody.fields.map((item, index) => {
-        return {
-          name: item,
-          sample: '',
-          selected: false,
-          shortcut: null,
-        }
-      })
-      this.setState({
-        csvUploaded: true,
-        data: data,
-      })
-    })
-    .catch((error) => {
+    }
+    catch(error) {
       console.log('Request failed', error)
-    })
+    }
   }
 
-  onFieldToggle(index) {
+  onFieldToggle = (index) => {
     let data = this.state.data
     data[index].selected = !data[index].selected
     this.setState({
@@ -115,7 +112,7 @@ export default class AddDatasetContainer extends React.Component {
     })
   }
 
-  onShortcutChange(index, character) {
+  onShortcutChange = (index, character) => {
     let data = this.state.data
     if (character) {
       data[index].shortcut = character.toUpperCase()

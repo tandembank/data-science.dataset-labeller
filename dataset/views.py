@@ -1,5 +1,6 @@
 import csv
 import json
+from time import sleep
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -53,4 +54,5 @@ def csv_upload(request):
             'path': file.temporary_file_path(),
             'fields': fields,
         }
+    sleep(2)
     return JsonResponse(data)
