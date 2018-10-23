@@ -49,6 +49,17 @@ button:hover {
   background: linear-gradient(to top, #2aead1 0%, #1ac6b0 100%);
 }
 
+input[type="text"], input[type="password"] {
+  font-weight: bold;
+  border-radius: 1px;
+  border: 0;
+  padding: 2px;
+  color: #282c34;
+}
+input::placeholder {
+  color: rgba(0, 0, 0, 0.2);
+}
+
 .icon {
   width: 24px;
   height: 24px;

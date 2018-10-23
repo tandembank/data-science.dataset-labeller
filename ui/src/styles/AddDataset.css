@@ -104,14 +104,24 @@
   font-size: 14px;
 }
 
-.AddDataset .createDataset .pickFields li {
+.AddDataset .createDataset .enterMetadata .datasetName {
+  margin: 0 0 40px 40px;
+  font-size: 22px;
+  padding: 4px 6px;
+  width: 400px;
+}
+.AddDataset .createDataset .enterMetadata .pickFields {
+  margin-bottom: 40px;
+}
+.AddDataset .createDataset .enterMetadata li {
   list-style: none;
   margin-bottom: 10px;
+  font-size: 14px;
 }
-.AddDataset .createDataset .pickFields li .clickArea {
+.AddDataset .createDataset .enterMetadata .pickFields li .clickArea {
   cursor: pointer;
 }
-.AddDataset .createDataset .pickFields li .example {
+.AddDataset .createDataset .enterMetadata .pickFields li .example {
   font-size: 10px;
   color: rgba(255,255,255,0.5);
   margin-left: 10px;
@@ -124,22 +134,29 @@
   vertical-align: -3px;
 }
 
-.AddDataset .createDataset .pickFields li .clickArea:hover .icon {
+.AddDataset .createDataset .enterMetadata .pickFields li .clickArea:hover .icon {
   background-color: #fff;
 }
 
-.AddDataset .createDataset .pickFields li .shortcut {
+.AddDataset .createDataset .enterMetadata .pickFields li .shortcut {
   margin: 5px 0 0 45px;
   color: rgba(255, 255, 255, 0.5);
   font-size: 12px;
 }
-.AddDataset .createDataset .pickFields li .shortcut input {
+.AddDataset .createDataset .enterMetadata .pickFields li .shortcut input {
   width: 1em;
   text-align: center;
   font-weight: bold;
   text-transform: uppercase;
   margin-left: 5px;
-  border-radius: 1px;
-  border: 0;
-  padding: 2px;
+}
+
+.AddDataset .createDataset .enterMetadata .defineLabels input.name {
+  width: 150px;
+  margin: 0 20px 0 10px;
+}
+.AddDataset .createDataset .enterMetadata .defineLabels input.shortcut {
+  width: 30px;
+  margin: 0 0 0 10px;
+  text-align: center;
 }

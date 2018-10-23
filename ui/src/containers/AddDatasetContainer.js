@@ -9,7 +9,10 @@ export default class AddDatasetContainer extends React.Component {
       csrftoken: '',
       started: props.started,
       csvUploaded: props.csvUploaded,
+      name: null,
       data: props.data,
+      labels: props.labels,
+      numDatapoints: props.numDatapoints,
       uploading: false,
       uploadError: null,
     }
@@ -23,7 +26,7 @@ export default class AddDatasetContainer extends React.Component {
     try {
       const response = await fetch('/api/csrf-token/')
       if (response.ok) {
-        let responseBody = await response.json()
+        const responseBody = await response.json()
         this.setState({csrftoken: responseBody.csrftoken})
       }
       else {
@@ -83,7 +86,7 @@ export default class AddDatasetContainer extends React.Component {
         let data = responseBody.fields.map((item, index) => {
           return {
             name: item,
-            sample: '',
+            sample: responseBody.samples[index],
             selected: false,
             shortcut: null,
           }
@@ -93,6 +96,8 @@ export default class AddDatasetContainer extends React.Component {
           uploading: false,
           csvUploaded: true,
           data: data,
+          labels: [],
+          numDatapoints: responseBody.num_datapoints,
         })
       }
       else {
@@ -102,6 +107,14 @@ export default class AddDatasetContainer extends React.Component {
     catch(error) {
       console.log('Request failed', error)
     }
+  }
+
+  onNameChange = (name) => {
+    let data = this.state.data
+    data.name = name
+    this.setState({
+      name: name,
+    })
   }
 
   onFieldToggle = (index) => {
@@ -122,20 +135,30 @@ export default class AddDatasetContainer extends React.Component {
     }
   }
 
+  onLabelChange = (index, field, content) => {
+    let labels = this.state.labels
+
+    this.setState({
+      labels: labels,
+    })
+  }
+
   render() {
     return <AddDataset
       started={this.state.started}
       csvUploaded={this.state.csvUploaded}
       data={this.state.data}
+      labels={this.state.labels}
+      numDatapoints={this.state.numDatapoints}
       onClose={this.onClose}
       onStart={this.onStart}
-      onDropzoneEnter={this.onDropzoneEnter}
-      onDropzoneLeave={this.onDropzoneLeave}
       onDrop={this.onDrop}
       uploading={this.state.uploading}
       uploadError={this.state.uploadError}
+      onNameChange={this.onNameChange}
       onFieldToggle={this.onFieldToggle}
       onShortcutChange={this.onShortcutChange}
+      onLabelChange={this.onLabelChange}
     />
   }
 }

@@ -106,11 +106,21 @@ const Components = ({ match }) => (
       <DatasetContainer percentComplete={62.5} name="Fruit" createdBy="Damian" createdAt="17/10/2018" numDatapoints="5000" numLabels="2" numUserLabels="3" />
       <AddDatasetContainer />
       <AddDatasetContainer started={true} />
-      <AddDatasetContainer started={true} csvUploaded={true} data={[
-        {name: 'message_id', sample: '252956', selected: false, shortcut: null},
-        {name: 'date', sample: '2018-10-22', selected: true, shortcut: 'D'},
-        {name: 'conversation', sample: '<p>Hi, I have a question about my card.</p>', selected: false, shortcut: null},
-      ]} />
+      <AddDatasetContainer
+        started={true}
+        csvUploaded={true}
+        data={[
+          {name: 'shape', sample: 'round', selected: false, shortcut: null},
+          {name: 'color', sample: 'green', selected: true, shortcut: 'D'},
+          {name: 'texture', sample: 'smooth', selected: false, shortcut: null},
+        ]}
+        labels={[
+          {name: 'Apple', shortcut: 'A'},
+          {name: 'Orange', shortcut: 'O'},
+          {name: 'Pear', shortcut: 'P'},
+        ]}
+        numDatapoints="5000"
+      />
       <LabellerContainer
         data={[
           {key: 'shape', value: 'round'},
@@ -118,9 +128,9 @@ const Components = ({ match }) => (
           {key: 'texture', value: 'smooth'},
         ]}
         labels={[
-          {id: 1, key: '1', name: 'Apple'},
-          {id: 2, key: '2', name: 'Orange'},
-          {id: 3, key: '3', name: 'Pear'},
+          {id: 1, shortcut: 'A', name: 'Apple'},
+          {id: 2, shortcut: 'O', name: 'Orange'},
+          {id: 3, shortcut: 'P', name: 'Pear'},
         ]} />
     </div>
   </div>

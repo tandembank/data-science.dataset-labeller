@@ -20,8 +20,8 @@ const Labeller = params => (
       {
         params.labels.map((label) => {
           return (
-            <li key={Math.random()}>
-              <span className="key">{label.key}</span>
+            <li key={label.name}>
+              <span className="shortcut">{label.shortcut}</span>
               <span className="name">{label.name}</span>
             </li>
           )

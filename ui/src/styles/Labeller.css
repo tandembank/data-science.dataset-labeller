@@ -48,7 +48,7 @@
   border-color: rgba(255, 255, 255, 1);
 }
 
-.Labeller .options .key {
+.Labeller .options .shortcut {
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 5px;
   background: rgba(255, 255, 255, 0.1);

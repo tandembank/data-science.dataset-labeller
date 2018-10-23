@@ -4,7 +4,7 @@ import Spinner from '../components/Spinner'
 import '../styles/AddDataset.css'
 
 
-function startAction(params) {
+const startAction = (params) => {
   return (
     <div className="startAction" onClick={() => params.onStart()}>
       <div>
@@ -17,7 +17,7 @@ function startAction(params) {
   )
 }
 
-function createDataset(params) {
+const createDataset = (params) => {
   let content = null
   if (params.uploading) {
     content = (
@@ -28,7 +28,7 @@ function createDataset(params) {
     )
   }
   else if (params.csvUploaded) {
-    content = pickFields(params)
+    content = enterMetadata(params)
   }
   else {
     content = uploadCSV(params)
@@ -43,7 +43,7 @@ function createDataset(params) {
   )
 }
 
-function uploadCSV(params) {
+const uploadCSV = (params) => {
   let uploadError = null
   if (params.uploadError) {
     uploadError = <p className="error">{params.uploadError}</p>
@@ -69,26 +69,46 @@ function uploadCSV(params) {
   )
 }
 
-function field(item, index, onFieldToggle, onShortcutChange) {
-  let shortcutField = <div className="shortcut">Shortcut key: <input type="text" maxLength="1" defaultValue={item.shortcut} onKeyUp={(e) => onShortcutChange(index, e.target.value)}></input></div>
+const field = (item, index, onFieldToggle, onShortcutChange) => {
   return (
     <li key={Math.random()}>
       <span className="clickArea" onClick={() => onFieldToggle(index)}>
         <span className={item.selected ? `icon iconChecked` : `icon iconCheck`} />
         <span className="name">{item.name}</span>
       </span>
-      <span className="example">sample: {item.sample}</span>
-      {item.selected ? shortcutField : null}
+      <span className="example">sample: <strong>{item.sample}</strong></span>
     </li>
   )
 }
 
-function pickFields(params) {
+const label = (item, index, onLabelChange) => {
   return (
-    <div>
+    <li key={Math.random()}>
+      <span className="label">
+        Label
+        <input type="text" className="name" placeholder="Required" defaultValue={item.name}></input>
+      </span>
+      <span>
+        Shortcut
+        <input type="text" className="shortcut" defaultValue={item.shortcut}></input>
+      </span>
+    </li>
+  )
+}
+
+const enterMetadata = (params) => {
+  return (
+    <div className="enterMetadata">
+      <p><strong>{params.numDatapoints}</strong> datapoints</p>
+      <p>Dataset name</p>
+      <input type="text" className="datasetName" placeholder="Required" onKeyUp={(e) => params.onNameChange(e.target.value)}></input>
       <p>Pick fields to display for labelling</p>
       <ul className="pickFields">
         {params.data.map((item, index) => field(item, index, params.onFieldToggle, params.onShortcutChange))}
+      </ul>
+      <p>Define labels</p>
+      <ul className="defineLabels">
+        {params.labels.map((item, index) => label(item, index, params.onLabelChange))}
       </ul>
       <div className="buttonBar">
         <button>Create dataset</button>
