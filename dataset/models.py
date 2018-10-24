@@ -8,22 +8,22 @@ from django.contrib.auth.models import User
 
 class DatasetManager(models.Manager):
     @transaction.atomic
-    def create_from_list(self, name, data, display_columns=None, num_user_labels=None):
-        # Work out what feature columns are used from the first 1000 datapoints (rows)
-        columns = {}
+    def create_from_list(self, name, data, display_fields=None, num_labellings_required=None):
+        # Work out what feature fields are used from the first 1000 datapoints (rows)
+        fields = {}
         for row in data[:1000]:
             for k, v in row.items():
-                if not k in columns:
-                    columns[k] = True
-        columns = json.dumps(sorted(list(columns.keys())), sort_keys=True)
+                if not k in fields:
+                    fields[k] = True
+        fields = json.dumps(sorted(list(fields.keys())), sort_keys=True)
 
-        if not display_columns:
-            display_columns = columns
-        if not num_user_labels:
-            num_user_labels = 3
+        if not display_fields:
+            display_fields = fields
+        if not num_labellings_required:
+            num_labellings_required = 3
 
         # Create the Dataset object
-        ds = self.create(name=name, columns=columns, display_columns=display_columns, num_user_labels=num_user_labels)
+        ds = self.create(name=name, fields=fields, display_fields=display_fields, num_labellings_required=num_labellings_required)
 
         # Add a Datapoint for each row
         for i, row in enumerate(data):
@@ -33,25 +33,26 @@ class DatasetManager(models.Manager):
 
 
 class Dataset(models.Model):
-    name            = models.CharField(max_length=200, unique=True)
-    columns         = models.TextField()
-    display_columns = models.TextField()
-    num_user_labels = models.IntegerField()
-    objects         = DatasetManager()
+    name                = models.CharField(max_length=200, unique=True)
+    fields             = models.TextField()
+    display_fields     = models.TextField()
+    num_labellings_required = models.IntegerField()
+    objects             = DatasetManager()
 
     def __str__(self):
         return self.name
 
     def labelling_complete(self):
-        num_final_user_labels = self.datapoints.count() * self.num_user_labels
-        num_user_labels = UserLabel.objects.filter(label__dataset=self).count()
-        return num_user_labels / num_final_user_labels
+        num_final_user_labels = self.datapoints.count() * self.num_labellings_required
+        num_labellings_required = UserLabel.objects.filter(label__dataset=self).count()
+        return num_labellings_required / num_final_user_labels
 
 
 class Datapoint(models.Model):
-    dataset = models.ForeignKey(Dataset, on_delete='CASCADE', related_name='datapoints')
-    index   = models.IntegerField()
-    data    = models.TextField()
+    dataset             = models.ForeignKey(Dataset, on_delete='CASCADE', related_name='datapoints')
+    index               = models.IntegerField()
+    data                = models.TextField()
+    multiple_selection  = models.BooleanField(default=False)
 
     def __str__(self):
         return '{}: {}: {}'.format(self.dataset.name, self.index, self.data)
@@ -63,7 +64,7 @@ class Datapoint(models.Model):
         return scores
 
     def label_determined(self):
-        if self.user_labels.count() < self.dataset.num_user_labels:
+        if self.user_labels.count() < self.dataset.num_labellings_required:
             return None
         sorted_labels = sorted(self.label_scores().items(), key=operator.itemgetter(1), reverse=True)
         if not len(sorted_labels):
@@ -78,13 +79,15 @@ class Datapoint(models.Model):
 
 
 class Label(models.Model):
-    dataset = models.ForeignKey(Dataset, on_delete='CASCADE', related_name='labels')
-    name    = models.CharField(max_length=200)
+    dataset     = models.ForeignKey(Dataset, on_delete='CASCADE', related_name='labels')
+    name        = models.CharField(max_length=200)
+    shortcut    = models.CharField(max_length=10)
+    index       = models.PositiveSmallIntegerField(default=0)
 
-    unique_together = (('dataset', 'name'),)
+    unique_together = (('dataset', 'name'), ('dataset', 'shortcut'))
 
     def __str__(self):
-        return '{}: {}'.format(self.dataset.name, self.name)
+        return '{}: {} ({})'.format(self.dataset.name, self.name, self.index)
 
 
 class UserLabel(models.Model):

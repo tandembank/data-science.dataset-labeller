@@ -22,7 +22,7 @@ const Dataset = params => (
     </div>
     <div className="numUserLabels">
       <div className="numberLarge">{params.numUserLabels}</div>
-      <div className="description">Labels per datapoint</div>
+      <div className="description">Labellings required</div>
     </div>
     <div className="controls">
       <span className="icon iconEdit" title="Edit" />

@@ -105,11 +105,11 @@ const enterMetadata = (params) => {
       <h2>Creating dataset with {params.numDatapoints} datapoints</h2>
 
       <p>Dataset name</p>
-      <input type="text" className="datasetName" placeholder="Required" onKeyUp={(e) => params.onNameChange(e.target.value)}></input>
+      <input type="text" className="datasetName" placeholder="Required" defaultValue={params.name} onKeyUp={(e) => params.onNameChange(e.target.value)}></input>
 
       <p>Fields to be displayed for labelling</p>
       <ul className="pickFields">
-        {params.data.map((item, index) => field(item, index, params))}
+        {params.fields.map((item, index) => field(item, index, params))}
       </ul>
 
       <p>Labels to be chosen from</p>
@@ -125,11 +125,11 @@ const enterMetadata = (params) => {
         </span>
       </div>
 
-      <p>Number of user labels required per datapoint</p>
-      <input type="number" className="numUserLabels" placeholder="0" min="1" max="10" onKeyUp={(e) => params.onNameChange(e.target.value)}></input>
+      <p>Number of user labellings required per datapoint</p>
+      <input type="number" className="numUserLabels" placeholder="0" min="1" max="10" defaultValue={params.numLabellingsRequired} onKeyUp={(e) => params.onnumLabellingsRequiredChange(e.target.value)} onChange={(e) => params.onnumLabellingsRequiredChange(e.target.value)}></input>
 
       <div className="buttonBar">
-        <button>Create dataset</button>
+        <button onClick={() => params.onSubmit()}>Create dataset</button>
       </div>
     </div>
   )

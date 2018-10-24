@@ -211,6 +211,9 @@
 .AddDataset .createDataset .enterMetadata .multipleLabels .clickArea {
   cursor: pointer;
 }
+.AddDataset .createDataset .enterMetadata .multipleLabels .clickArea:hover .icon {
+  background: #fff;
+}
 .AddDataset .createDataset .enterMetadata .multipleLabels .icon {
   mask-size: 48px;
   width: 48px;

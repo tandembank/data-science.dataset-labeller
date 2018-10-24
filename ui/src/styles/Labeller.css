@@ -16,7 +16,7 @@
 .Labeller .card div {
   margin-bottom: 20px;
 }
-.Labeller .card div .shortcut {
+.Labeller .card div .key {
   display: block;
   text-transform: uppercase;
   margin-bottom: 5px;
@@ -24,10 +24,12 @@
   font-size: 14px;
 }
 .Labeller .card div .value {
-  margin: 0 auto;
+  margin: 0 20px;
   display: flex;
   justify-content: center;
   font-size: 20px;
+  max-height: 50vh;
+  overflow: auto;
 }
 
 .Labeller .options {

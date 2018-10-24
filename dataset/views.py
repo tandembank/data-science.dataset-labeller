@@ -7,7 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.middleware.csrf import get_token
 
-from .models import Dataset
+from .models import Dataset, Label
 
 
 def index(request):
@@ -26,23 +26,49 @@ def csrf_token(request):
 
 
 def datasets(request):
-    datasets = []
-    for dataset in Dataset.objects.all():
-        datasets.append({
-            'id':                   dataset.id,
-            'name':                 dataset.name,
-            'columns':              json.loads(dataset.columns),
-            'display_columns':      json.loads(dataset.display_columns),
-            'num_user_labels':      dataset.num_user_labels,
-            'num_datapoints':       dataset.datapoints.count(),
-            'labelling_complete':   dataset.labelling_complete(),
-        })
+    if request.method == 'GET':
+        datasets = []
+        for dataset in Dataset.objects.all():
+            datasets.append({
+                'id':                   dataset.id,
+                'name':                 dataset.name,
+                'fields':               json.loads(dataset.fields),
+                'display_fields':       json.loads(dataset.display_fields),
+                'num_labellings_required':  dataset.num_labellings_required,
+                'num_datapoints':       dataset.datapoints.count(),
+                'labelling_complete':   dataset.labelling_complete(),
+            })
 
-    data = {
-        'datasets': datasets,
-        'count': Dataset.objects.count()
-    }
-    return JsonResponse(data)
+        responseData = {
+            'datasets': datasets,
+            'count': Dataset.objects.count()
+        }
+        return JsonResponse(responseData)
+
+    else:  # POST data
+        data = json.loads(request.POST['data'])
+        # import pdb; pdb.set_trace()
+
+        dataset = Dataset.objects.create_from_list(
+            name=data['name'],
+            data=[],
+            display_fields=data['display_fields'],
+            num_labellings_required=data['num_labellings_required']
+        )
+        dataset.save()
+
+        for i, label in enumerate(data['labels']):
+            Label.objects.create(
+                dataset=dataset,
+                name=label['name'],
+                shortcut=label['shortcut'],
+                index=i)
+
+        responseData = {
+            'status':   'OK',
+            'id':       dataset.id,
+        }
+        return JsonResponse(responseData)
 
 
 def csv_upload(request):

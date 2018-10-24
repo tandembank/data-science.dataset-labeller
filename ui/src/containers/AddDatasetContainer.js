@@ -10,11 +10,14 @@ export default class AddDatasetContainer extends React.Component {
       csrftoken: '',
       started: props.started,
       csvUploaded: props.csvUploaded,
-      name: null,
-      data: props.data,
+
+      name: props.name,
+      fields: props.fields,
       labels: this.ensureLabelIds(props.labels),
+      numLabellingsRequired: props.numLabellingsRequired,
+      multipleLabels: props.multipleLabels | false,
+
       numDatapoints: props.numDatapoints,
-      multipleLabels: props.multipleLabels,
       uploading: false,
       uploadError: null,
     }
@@ -61,7 +64,7 @@ export default class AddDatasetContainer extends React.Component {
     this.setState({
       started: false,
       csvUploaded: false,
-      data: [],
+      fields: [],
     })
   }
 
@@ -102,7 +105,7 @@ export default class AddDatasetContainer extends React.Component {
       if (response.ok) {
         const responseBody = await response.json()
 
-        let data = responseBody.fields.map((item, index) => {
+        let fields = responseBody.fields.map((item, index) => {
           return {
             name: item,
             sample: responseBody.samples[index],
@@ -114,7 +117,7 @@ export default class AddDatasetContainer extends React.Component {
         this.setState({
           uploading: false,
           csvUploaded: true,
-          data: data,
+          fields: fields,
           labels: [],
           numDatapoints: responseBody.num_datapoints,
         })
@@ -129,18 +132,16 @@ export default class AddDatasetContainer extends React.Component {
   }
 
   onNameChange = (name) => {
-    let data = this.state.data
-    data.name = name
     this.setState({
       name: name,
     })
   }
 
   onFieldToggle = (index) => {
-    let data = this.state.data
-    data[index].selected = !data[index].selected
+    let fields = this.state.fields
+    fields[index].selected = !fields[index].selected
     this.setState({
-      data: data,
+      fields: fields,
     })
   }
 
@@ -200,12 +201,72 @@ export default class AddDatasetContainer extends React.Component {
     })
   }
 
+  onnumLabellingsRequiredChange = (num) => {
+    this.setState({
+      numLabellingsRequired: num ? parseInt(num, 10) : undefined,
+    })
+  }
+
+  onSubmit = async () => {
+    // Remove any temporary label IDs that are just for component rendering
+    let state = {}
+    Object.assign(state, {labels: this.state.labels})
+    let labels = state.labels.map((label) => {
+      if (label.id.indexOf('new_') === 0) {
+        let newLabel = {}
+        Object.assign(newLabel, label)
+        newLabel.id = undefined
+        return newLabel
+      }
+      return label
+    })
+
+    // Make array of fields to display
+    let fields = []
+    for (let field of this.state.fields) {
+      if (field.selected) {
+        fields.push(field.name)
+      }
+    }
+
+    let requestData = {
+      name: this.state.name,
+      display_fields: fields,
+      labels: labels,
+      multiple_labels: this.state.multipleLabels,
+      num_labellings_required: this.state.numLabellingsRequired,
+    }
+
+    let formData = new FormData()
+    formData.append('data', JSON.stringify(requestData))
+    formData.append('csrfmiddlewaretoken', this.state.csrftoken)
+
+    try {
+      const response = await fetch('/api/datasets/', {
+        method: 'post',
+        body: formData,
+      })
+      if (response.ok) {
+        const responseBody = await response.json()
+        this.setState({csrftoken: responseBody.csrftoken})
+      }
+      else {
+        throw new Error('Post Failed')
+      }
+    }
+    catch(error) {
+      console.log('Request failed', error)
+    }
+  }
+
   render() {
     return <AddDataset
       started={this.state.started}
       csvUploaded={this.state.csvUploaded}
-      data={this.state.data}
+      name={this.state.name}
+      fields={this.state.fields}
       labels={this.state.labels}
+      numLabellingsRequired={this.state.numLabellingsRequired}
       numDatapoints={this.state.numDatapoints}
       onClose={this.onClose}
       onStart={this.onStart}
@@ -220,6 +281,8 @@ export default class AddDatasetContainer extends React.Component {
       onLabelDelete={this.onLabelDelete}
       multipleLabels={this.state.multipleLabels}
       onMultipleLabelsToggle={this.onMultipleLabelsToggle}
+      onnumLabellingsRequiredChange={this.onnumLabellingsRequiredChange}
+      onSubmit={this.onSubmit}
     />
   }
 }

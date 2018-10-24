@@ -109,16 +109,18 @@ const Components = ({ match }) => (
       <AddDatasetContainer
         started={true}
         csvUploaded={true}
-        data={[
-          {name: 'shape', sample: 'round', selected: false, shortcut: null},
-          {name: 'color', sample: 'green', selected: true, shortcut: 'D'},
-          {name: 'texture', sample: 'smooth', selected: false, shortcut: null},
+        name="Fruit"
+        fields={[
+          {name: 'shape', sample: 'round', selected: false},
+          {name: 'color', sample: 'green', selected: true},
+          {name: 'texture', sample: 'smooth', selected: false},
         ]}
         labels={[
           {name: 'Apple', shortcut: 'A'},
           {name: 'Orange', shortcut: 'O'},
           {name: 'Pear', shortcut: 'P'},
         ]}
+        numLabellingsRequired="3"
         numDatapoints="5000"
       />
       <LabellerContainer
