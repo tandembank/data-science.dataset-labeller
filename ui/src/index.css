@@ -42,14 +42,14 @@ button {
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 3px;
-  box-shadow: 1px 1px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 button:hover {
   background: #1ac6b0;
   background: linear-gradient(to top, #2aead1 0%, #1ac6b0 100%);
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], input[type="number"] {
   font-weight: bold;
   border-radius: 1px;
   border: 0;
@@ -69,4 +69,9 @@ input::placeholder {
 }
 .buttonBar {
   text-align: right;
+}
+
+h2 {
+  font-size: 22px;
+  margin: 0 0 40px 0;
 }

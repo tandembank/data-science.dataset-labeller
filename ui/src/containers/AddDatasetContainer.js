@@ -1,6 +1,7 @@
 import React from 'react'
 import AddDataset from '../components/AddDataset'
 
+let lastLabelId = 0
 
 export default class AddDatasetContainer extends React.Component {
   constructor(props) {
@@ -11,8 +12,9 @@ export default class AddDatasetContainer extends React.Component {
       csvUploaded: props.csvUploaded,
       name: null,
       data: props.data,
-      labels: props.labels,
+      labels: this.ensureLabelIds(props.labels),
       numDatapoints: props.numDatapoints,
+      multipleLabels: props.multipleLabels,
       uploading: false,
       uploadError: null,
     }
@@ -36,6 +38,23 @@ export default class AddDatasetContainer extends React.Component {
     catch(error) {
       console.log('Request failed', error)
     }
+  }
+
+  newLabelId = (prefix='id') => {
+    lastLabelId++
+    return prefix + lastLabelId
+  }
+
+  ensureLabelIds = (labels) => {
+    if (labels) {
+      labels = labels.map((label) => {
+        if (!label.id) {
+          label.id = this.newLabelId('new_')
+        }
+        return label
+      })
+    }
+    return labels
   }
 
   onClose = () => {
@@ -125,21 +144,59 @@ export default class AddDatasetContainer extends React.Component {
     })
   }
 
-  onShortcutChange = (index, character) => {
-    let data = this.state.data
-    if (character) {
-      data[index].shortcut = character.toUpperCase()
+  onLabelChange = (index, content) => {
+    let labels = this.state.labels
+    if (content) {
+      labels[index].name = content
     }
     else {
-      data[index].shortcut = null
+      labels[index].name = null
     }
-  }
-
-  onLabelChange = (index, field, content) => {
-    let labels = this.state.labels
 
     this.setState({
       labels: labels,
+    })
+  }
+
+  onShortcutChange = (index, character) => {
+    let labels = this.state.labels
+    labels[index].shortcut = character.toUpperCase()
+
+    this.setState({
+      labels: labels,
+    })
+  }
+
+  onLabelAdd = () => {
+    let labels = this.state.labels
+    if (labels.length === 0 || labels[labels.length -1].name) {
+      labels.push(
+        {name: null, shortcut: labels.length + 1, id: this.newLabelId('new_')}
+      )
+    }
+
+    this.setState({
+      labels: labels,
+    })
+  }
+
+  onLabelDelete = (index) => {
+    let labels = this.state.labels
+    labels.splice(index, 1)
+
+    this.setState({
+      labels: labels,
+    })
+  }
+
+  onMultipleLabelsToggle = () => {
+    let multipleLabels = false
+    if (!this.state.multipleLabels) {
+      multipleLabels = true
+    }
+
+    this.setState({
+      multipleLabels: multipleLabels,
     })
   }
 
@@ -157,8 +214,12 @@ export default class AddDatasetContainer extends React.Component {
       uploadError={this.state.uploadError}
       onNameChange={this.onNameChange}
       onFieldToggle={this.onFieldToggle}
-      onShortcutChange={this.onShortcutChange}
       onLabelChange={this.onLabelChange}
+      onShortcutChange={this.onShortcutChange}
+      onLabelAdd={this.onLabelAdd}
+      onLabelDelete={this.onLabelDelete}
+      multipleLabels={this.state.multipleLabels}
+      onMultipleLabelsToggle={this.onMultipleLabelsToggle}
     />
   }
 }

@@ -55,7 +55,7 @@ const uploadCSV = (params) => {
         <ReactDropzone
           className="dropzone"
           onDrop={params.onDrop}
-          accept="text/*"
+          accept="text/csv,.csv"
           activeClassName="dropzoneActive"
         >
           <div>
@@ -69,10 +69,10 @@ const uploadCSV = (params) => {
   )
 }
 
-const field = (item, index, onFieldToggle, onShortcutChange) => {
+const field = (item, index, params) => {
   return (
     <li key={Math.random()}>
-      <span className="clickArea" onClick={() => onFieldToggle(index)}>
+      <span className="clickArea" onClick={() => params.onFieldToggle(index)}>
         <span className={item.selected ? `icon iconChecked` : `icon iconCheck`} />
         <span className="name">{item.name}</span>
       </span>
@@ -81,16 +81,19 @@ const field = (item, index, onFieldToggle, onShortcutChange) => {
   )
 }
 
-const label = (item, index, onLabelChange) => {
+const label = (item, index, params) => {
   return (
-    <li key={Math.random()}>
+    <li key={item.id}>
       <span className="label">
-        Label
-        <input type="text" className="name" placeholder="Required" defaultValue={item.name}></input>
+        Name
+        <input type="text" className="name" placeholder="Required" defaultValue={item.name} onKeyUp={(e) => params.onLabelChange(index, e.target.value)}></input>
       </span>
       <span>
         Shortcut
-        <input type="text" className="shortcut" defaultValue={item.shortcut}></input>
+        <input type="text" className="shortcut" defaultValue={item.shortcut} onKeyUp={(e) => params.onShortcutChange(index, e.target.value)}></input>
+      </span>
+      <span className="delete">
+        <span className="icon iconDelete" onClick={() => params.onLabelDelete(index)} />
       </span>
     </li>
   )
@@ -99,17 +102,32 @@ const label = (item, index, onLabelChange) => {
 const enterMetadata = (params) => {
   return (
     <div className="enterMetadata">
-      <p><strong>{params.numDatapoints}</strong> datapoints</p>
+      <h2>Creating dataset with {params.numDatapoints} datapoints</h2>
+
       <p>Dataset name</p>
       <input type="text" className="datasetName" placeholder="Required" onKeyUp={(e) => params.onNameChange(e.target.value)}></input>
-      <p>Pick fields to display for labelling</p>
+
+      <p>Fields to be displayed for labelling</p>
       <ul className="pickFields">
-        {params.data.map((item, index) => field(item, index, params.onFieldToggle, params.onShortcutChange))}
+        {params.data.map((item, index) => field(item, index, params))}
       </ul>
-      <p>Define labels</p>
+
+      <p>Labels to be chosen from</p>
       <ul className="defineLabels">
-        {params.labels.map((item, index) => label(item, index, params.onLabelChange))}
+        {params.labels.map((item, index) => label(item, index, params))}
+        <li className="addLabel" onClick={() => params.onLabelAdd()}><span className="icon iconAdd" />Add label</li>
       </ul>
+
+      <p>Multiple selection of labels allowed</p>
+      <div className="multipleLabels">
+        <span className="clickArea" onClick={() => params.onMultipleLabelsToggle()}>
+          <span className={params.multipleLabels ? `icon iconToggleOn` : `icon iconToggleOff`} />
+        </span>
+      </div>
+
+      <p>Number of user labels required per datapoint</p>
+      <input type="number" className="numUserLabels" placeholder="0" min="1" max="10" onKeyUp={(e) => params.onNameChange(e.target.value)}></input>
+
       <div className="buttonBar">
         <button>Create dataset</button>
       </div>

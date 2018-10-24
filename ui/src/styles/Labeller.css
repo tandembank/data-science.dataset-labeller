@@ -11,12 +11,12 @@
   border-radius: 10px;
   padding: 40px 40px 20px;
   margin-bottom: 40px;
-  box-shadow: 1px 1px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
 }
 .Labeller .card div {
   margin-bottom: 20px;
 }
-.Labeller .card div .key {
+.Labeller .card div .shortcut {
   display: block;
   text-transform: uppercase;
   margin-bottom: 5px;
@@ -43,7 +43,7 @@
   color: rgba(255, 255, 255, 0.5);
   padding: 20px 20px;
 }
-.Labeller .options li:hover .key, .Labeller .options li:hover .name {
+.Labeller .options li:hover .shortcut, .Labeller .options li:hover .name {
   color: rgba(255, 255, 255, 1);
   border-color: rgba(255, 255, 255, 1);
 }

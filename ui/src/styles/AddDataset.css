@@ -57,6 +57,12 @@
   vertical-align: -6px;
   margin-right: 10px;
 }
+.AddDataset .iconDelete {
+  mask-image: url(../images/delete.svg);
+  background: rgba(255, 255, 255, 1);
+  vertical-align: -6px;
+  margin-right: 10px;
+}
 
 .AddDataset .createDataset {
   position: relative;
@@ -151,12 +157,69 @@
   margin-left: 5px;
 }
 
+.AddDataset .createDataset .enterMetadata .defineLabels {
+  margin-bottom: 40px;
+}
 .AddDataset .createDataset .enterMetadata .defineLabels input.name {
   width: 150px;
   margin: 0 20px 0 10px;
 }
 .AddDataset .createDataset .enterMetadata .defineLabels input.shortcut {
   width: 30px;
-  margin: 0 0 0 10px;
+  margin: 0 20px 0 10px;
   text-align: center;
+  text-transform: uppercase;
+}
+.AddDataset .createDataset .enterMetadata .defineLabels .addLabel {
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0;
+  display: inline-block;
+  padding-right: 10px;
+}
+.AddDataset .createDataset .enterMetadata .defineLabels .addLabel .icon {
+  margin-right: 10px;
+  vertical-align: -6px;
+}
+.AddDataset .createDataset .enterMetadata .defineLabels .addLabel:hover {
+  color: #fff;
+}
+.AddDataset .createDataset .enterMetadata .defineLabels .addLabel:hover .icon {
+  background: #fff;
+}
+.AddDataset .createDataset .enterMetadata .defineLabels .iconDelete {
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  vertical-align: -8px;
+}
+.AddDataset .createDataset .enterMetadata .defineLabels .iconDelete:hover {
+  background-color: #fff;
+}
+
+.AddDataset .createDataset .enterMetadata .numUserLabels {
+  margin: 0 0 40px 40px;
+  font-size: 22px;
+  padding: 4px 6px;
+  width: 45px;
+}
+
+.AddDataset .createDataset .enterMetadata .multipleLabels {
+  margin: 0 0 40px 40px;
+  font-size: 22px;
+  width: 45px;
+}
+.AddDataset .createDataset .enterMetadata .multipleLabels .clickArea {
+  cursor: pointer;
+}
+.AddDataset .createDataset .enterMetadata .multipleLabels .icon {
+  mask-size: 48px;
+  width: 48px;
+  height: 20px;
+}
+.AddDataset .createDataset .enterMetadata .multipleLabels .iconToggleOn {
+  mask-image: url(../images/toggle_on.svg);
+  background: #fff;
+}
+.AddDataset .createDataset .enterMetadata .multipleLabels .iconToggleOff {
+  mask-image: url(../images/toggle_off.svg);
 }
