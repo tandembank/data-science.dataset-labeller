@@ -1,6 +1,7 @@
 import csv
 from io import StringIO
 import json
+import tempfile
 from time import sleep
 
 from django.http import HttpResponse, JsonResponse
@@ -47,11 +48,18 @@ def datasets(request):
 
     else:  # POST data
         data = json.loads(request.POST['data'])
-        # import pdb; pdb.set_trace()
+
+        rows = []
+        with open(data['temp_path'], 'r') as fp:
+            dialect = csv.Sniffer().sniff(fp.read(1024))
+            fp.seek(0)
+            reader = csv.DictReader(fp, dialect=dialect)
+            for row in reader:
+                rows.append(row)
 
         dataset = Dataset.objects.create_from_list(
             name=data['name'],
-            data=[],
+            data=rows,
             display_fields=data['display_fields'],
             num_labellings_required=data['num_labellings_required']
         )
@@ -92,12 +100,19 @@ def csv_upload(request):
             samples.append(row[field])
         break
 
+    # Save CSV file to temporary location
+    file.seek(0)
+    temp_path = tempfile.NamedTemporaryFile().name
+    with open(temp_path, 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
+
     if fields:
         data = {
-            'status': 'OK',
-            # 'path': file.temporary_file_path(),
-            'fields': fields,
-            'samples': samples,
-            'num_datapoints': num_datapoints,
+            'status':           'OK',
+            'fields':           fields,
+            'samples':          samples,
+            'num_datapoints':   num_datapoints,
+            'temp_path':        temp_path,
         }
     return JsonResponse(data)

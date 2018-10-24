@@ -27,6 +27,14 @@ const createDataset = (params) => {
       </div>
     )
   }
+  else if (params.saving) {
+    content = (
+      <div className="uploading">
+        <Spinner />
+        <p>Saving…</p>
+      </div>
+    )
+  }
   else if (params.csvUploaded) {
     content = enterMetadata(params)
   }

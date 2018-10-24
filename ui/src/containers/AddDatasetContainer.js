@@ -7,19 +7,21 @@ export default class AddDatasetContainer extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      csrftoken: '',
-      started: props.started,
-      csvUploaded: props.csvUploaded,
+      csrftoken:    '',
+      started:      props.started,
+      csvUploaded:  props.csvUploaded,
+      saving:       props.saving,
 
-      name: props.name,
-      fields: props.fields,
-      labels: this.ensureLabelIds(props.labels),
-      numLabellingsRequired: props.numLabellingsRequired,
-      multipleLabels: props.multipleLabels | false,
+      name:                   props.name,
+      fields:                 props.fields,
+      labels:                 this.ensureLabelIds(props.labels),
+      numLabellingsRequired:  props.numLabellingsRequired,
+      multipleLabels:         props.multipleLabels | false,
 
-      numDatapoints: props.numDatapoints,
-      uploading: false,
-      uploadError: null,
+      numDatapoints:  props.numDatapoints,
+      uploading:      false,
+      uploadError:    null,
+      tempPath:       null,
     }
   }
 
@@ -43,6 +45,27 @@ export default class AddDatasetContainer extends React.Component {
     }
   }
 
+  reset = () => {
+    this.setState({
+      csrftoken:    '',
+      started:      false,
+      csvUploaded:  false,
+      saving:       false,
+
+      name:                   null,
+      fields:                 [],
+      labels:                 [],
+      numLabellingsRequired:  null,
+      multipleLabels:         false,
+
+      numDatapoints:  null,
+      uploading:      false,
+      uploadError:    null,
+      tempPath:       null,
+    })
+    this.fetchCsrfToken()
+  }
+
   newLabelId = (prefix='id') => {
     lastLabelId++
     return prefix + lastLabelId
@@ -61,11 +84,7 @@ export default class AddDatasetContainer extends React.Component {
   }
 
   onClose = () => {
-    this.setState({
-      started: false,
-      csvUploaded: false,
-      fields: [],
-    })
+    this.reset()
   }
 
   onStart = () => {
@@ -120,6 +139,7 @@ export default class AddDatasetContainer extends React.Component {
           fields: fields,
           labels: [],
           numDatapoints: responseBody.num_datapoints,
+          tempPath: responseBody.temp_path,
         })
       }
       else {
@@ -235,11 +255,16 @@ export default class AddDatasetContainer extends React.Component {
       labels: labels,
       multiple_labels: this.state.multipleLabels,
       num_labellings_required: this.state.numLabellingsRequired,
+      temp_path: this.state.tempPath,
     }
 
     let formData = new FormData()
     formData.append('data', JSON.stringify(requestData))
     formData.append('csrfmiddlewaretoken', this.state.csrftoken)
+
+    this.setState({
+      saving: true,
+    })
 
     try {
       const response = await fetch('/api/datasets/', {
@@ -248,7 +273,8 @@ export default class AddDatasetContainer extends React.Component {
       })
       if (response.ok) {
         const responseBody = await response.json()
-        this.setState({csrftoken: responseBody.csrftoken})
+        console.log(responseBody)
+        this.reset()
       }
       else {
         throw new Error('Post Failed')
@@ -263,6 +289,7 @@ export default class AddDatasetContainer extends React.Component {
     return <AddDataset
       started={this.state.started}
       csvUploaded={this.state.csvUploaded}
+      saving={this.state.saving}
       name={this.state.name}
       fields={this.state.fields}
       labels={this.state.labels}
