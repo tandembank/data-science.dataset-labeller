@@ -91,6 +91,8 @@ def datasets(request):
         }
         return JsonResponse(responseData)
 
+def datapoints(request):
+    import pdb; pdb.set_trace()
 
 def csv_upload(request):
     # Read and detect CSV format

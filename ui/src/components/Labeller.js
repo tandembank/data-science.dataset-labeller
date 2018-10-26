@@ -1,33 +1,21 @@
 import React from 'react'
+import LabellerDetailContainer from '../containers/LabellerDetailContainer'
 import '../styles/Labeller.css'
 
 
 const Labeller = params => (
   <div className="Labeller">
-    <div className="card">
-        {
-          params.data.map((item) => {
-            return (
-              <div key={Math.random()}>
-                <span className="key">{item.key}:</span>
-                <div className="value">{item.value}</div>
-              </div>
-            )
-          })
-        }
-    </div>
-    <ul className="options">
-      {
-        params.labels.map((label) => {
-          return (
-            <li key={label.name}>
-              <span className="shortcut">{label.shortcut}</span>
-              <span className="name">{label.name}</span>
-            </li>
-          )
-        })
-      }
-    </ul>
+    <LabellerDetailContainer
+      data={[
+        {key: 'shape', value: 'round'},
+        {key: 'color', value: 'green'},
+        {key: 'texture', value: 'smooth'},
+      ]}
+      labels={[
+        {id: 1, shortcut: 'A', name: 'Apple'},
+        {id: 2, shortcut: 'O', name: 'Orange'},
+        {id: 3, shortcut: 'P', name: 'Pear'},
+      ]} />
   </div>
 )
 

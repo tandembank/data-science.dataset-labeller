@@ -5,6 +5,7 @@ import DatasetsContainer from '../containers/DatasetsContainer'
 import DatasetContainer from '../containers/DatasetContainer'
 import AddDatasetContainer from '../containers/AddDatasetContainer'
 import LabellerContainer from '../containers/LabellerContainer'
+import LabellerDetailContainer from '../containers/LabellerDetailContainer'
 import logo from '../images/logo.svg'
 import '../styles/App.css'
 
@@ -86,17 +87,7 @@ const Login = () => (
 
 const Label = () => (
   <div className="App-content">
-  <LabellerContainer
-    data={[
-      {key: 'shape', value: 'round'},
-      {key: 'color', value: 'green'},
-      {key: 'texture', value: 'smooth'},
-    ]}
-    labels={[
-      {id: 1, shortcut: 'A', name: 'Apple'},
-      {id: 2, shortcut: 'O', name: 'Orange'},
-      {id: 3, shortcut: 'P', name: 'Pear'},
-    ]} />
+    <LabellerContainer datasetId={1} />
   </div>
 )
 
@@ -159,7 +150,7 @@ const Components = ({ match }) => (
         numLabellingsRequired="3"
         numDatapoints="5000"
       />
-      <LabellerContainer
+      <LabellerDetailContainer
         data={[
           {key: 'shape', value: 'round'},
           {key: 'color', value: 'green'},
