@@ -59,9 +59,36 @@ export default class LabellerContainer extends React.Component {
     }
   }
 
+  onSelectLabel = async (id) => {
+    let formData = new FormData()
+    formData.append('label_id', id)
+
+    try {
+      const response = await fetch(`/api/assign-label/${this.state.datasetId}/`, {
+        method: 'post',
+        body: formData,
+      })
+      if (response.ok) {
+        const responseBody = await response.json()
+        // TODO: Move onto the next one
+      }
+      else {
+        throw new Error('Post Failed')
+      }
+    }
+    catch(error) {
+      console.log('Request failed', error)
+    }
+  }
+
   render() {
     if (this.state.currentDatapoint && this.state.labels) {
-      return <Labeller datasetId={this.state.datasetId} datapoint={this.state.currentDatapoint} labels={this.state.labels} />
+      return <Labeller
+        datasetId={this.state.datasetId}
+        datapoint={this.state.currentDatapoint}
+        labels={this.state.labels}
+        onSelectLabel={this.onSelectLabel}
+      />
     }
     return <span></span>
   }

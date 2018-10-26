@@ -9,6 +9,10 @@ export default class LabellerDetailContainer extends React.Component {
   }
 
   render() {
-    return <LabellerDetail data={this.props.data} labels={this.props.labels} />
+    return <LabellerDetail
+      data={this.props.data}
+      labels={this.props.labels}
+      onSelectLabel={this.props.onSelectLabel}
+    />
   }
 }

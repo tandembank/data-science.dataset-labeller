@@ -5,10 +5,11 @@ import tempfile
 from time import sleep
 
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
 from django.middleware.csrf import get_token
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
-from .models import Dataset, Label, Datapoint
+from .models import Dataset, Datapoint, Label, UserLabel
 
 
 def index(request):
@@ -113,7 +114,17 @@ def datapoints(request, dataset_id, limit=3):
             })
         result_datapoints.append(response_datapoint)
     responseData = {
-        'datapoints': result_datapoints
+        'datapoints': result_datapoints,
+    }
+    return JsonResponse(responseData)
+
+
+@csrf_exempt
+def assign_label(request, datapoint_id):
+    label_id = int(request.POST['label_id'])
+    UserLabel.objects.create(user=request.user, datapoint_id=datapoint_id, label_id=label_id)
+    responseData = {
+        'status': 'OK',
     }
     return JsonResponse(responseData)
 

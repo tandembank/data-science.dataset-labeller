@@ -7,7 +7,9 @@ const Labeller = params => (
   <div className="Labeller">
     <LabellerDetailContainer
       data={params.datapoint}
-      labels={params.labels} />
+      labels={params.labels}
+      onSelectLabel={params.onSelectLabel}
+    />
   </div>
 )
 

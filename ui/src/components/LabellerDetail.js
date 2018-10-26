@@ -19,8 +19,9 @@ const LabellerDetail = params => (
     <ul className="options">
       {
         params.labels.map((label) => {
+          console.log(label.id)
           return (
-            <li key={label.name}>
+            <li key={label.name} onClick={() => params.onSelectLabel(label.id)}>
               <span className="shortcut">{label.shortcut}</span>
               <span className="name">{label.name}</span>
             </li>
