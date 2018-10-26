@@ -33,11 +33,12 @@ class DatasetManager(models.Manager):
 
 
 class Dataset(models.Model):
-    name                = models.CharField(max_length=200, unique=True)
-    fields             = models.TextField()
-    display_fields     = models.TextField()
+    name                    = models.CharField(max_length=200, unique=True)
+    fields                  = models.TextField()
+    display_fields          = models.TextField()
     num_labellings_required = models.IntegerField()
-    objects             = DatasetManager()
+    multiple_labels         = models.BooleanField(default=False)
+    objects                 = DatasetManager()
 
     def __str__(self):
         return self.name
@@ -49,10 +50,9 @@ class Dataset(models.Model):
 
 
 class Datapoint(models.Model):
-    dataset             = models.ForeignKey(Dataset, on_delete='CASCADE', related_name='datapoints')
-    index               = models.IntegerField()
-    data                = models.TextField()
-    multiple_selection  = models.BooleanField(default=False)
+    dataset = models.ForeignKey(Dataset, on_delete='CASCADE', related_name='datapoints')
+    index   = models.IntegerField()
+    data    = models.TextField()
 
     def __str__(self):
         return '{}: {}: {}'.format(self.dataset.name, self.index, self.data)

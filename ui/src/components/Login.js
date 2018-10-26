@@ -2,8 +2,9 @@ import React from 'react'
 import '../styles/Login.css'
 
 
-const Login = params => (
+const Login = (params) => (
   <div className="Login">
+    {params.message}
     <form>
       <ul>
         <li>

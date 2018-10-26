@@ -30,14 +30,27 @@ def datasets(request):
     if request.method == 'GET':
         datasets = []
         for dataset in Dataset.objects.all():
+            fields = []
+            display_fields = json.loads(dataset.display_fields)
+            for field in json.loads(dataset.fields):
+                insertField = {
+                    'name': field,
+                    'sample': '',
+                    'selected': False,
+                }
+                if field in display_fields:
+                    insertField['selected'] = True
+                fields.append(insertField)
+
             datasets.append({
-                'id':                   dataset.id,
-                'name':                 dataset.name,
-                'fields':               json.loads(dataset.fields),
-                'display_fields':       json.loads(dataset.display_fields),
+                'id':                       dataset.id,
+                'name':                     dataset.name,
+                'fields':                   fields,
+                'labels':                   [{'name': label.name, 'shortcut': label.shortcut, 'id': label.id} for label in dataset.labels.all()],
+                'multiple_labels':          dataset.multiple_labels,
                 'num_labellings_required':  dataset.num_labellings_required,
-                'num_datapoints':       dataset.datapoints.count(),
-                'labelling_complete':   dataset.labelling_complete(),
+                'num_datapoints':           dataset.datapoints.count(),
+                'labelling_complete':       dataset.labelling_complete(),
             })
 
         responseData = {
@@ -60,7 +73,7 @@ def datasets(request):
         dataset = Dataset.objects.create_from_list(
             name=data['name'],
             data=rows,
-            display_fields=data['display_fields'],
+            display_fields=json.dumps(data['display_fields']),
             num_labellings_required=data['num_labellings_required']
         )
         dataset.save()

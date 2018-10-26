@@ -5,7 +5,7 @@ import App from '../components/App'
 export default class AppContainer extends React.Component {
   constructor() {
     super()
-    this.state = { loggedIn: null }
+    this.state = { loggedIn: true }
   }
   
   componentDidMount() {

@@ -136,9 +136,14 @@ const enterMetadata = (params) => {
       <p>Number of user labellings required per datapoint</p>
       <input type="number" className="numUserLabels" placeholder="0" min="1" max="10" defaultValue={params.numLabellingsRequired} onKeyUp={(e) => params.onnumLabellingsRequiredChange(e.target.value)} onChange={(e) => params.onnumLabellingsRequiredChange(e.target.value)}></input>
 
-      <div className="buttonBar">
-        <button onClick={() => params.onSubmit()}>Create dataset</button>
-      </div>
+      {
+        params.id ?
+        ''
+        :
+          <div className="buttonBar">
+            <button onClick={() => params.onSubmit()}>Create dataset</button>
+          </div>
+      }
     </div>
   )
 }

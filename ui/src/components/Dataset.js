@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import Donut from '../components/Donut'
 import '../styles/Dataset.css'
 
@@ -21,13 +22,15 @@ const Dataset = params => (
       <div className="description">Unique labels</div>
     </div>
     <div className="numUserLabels">
-      <div className="numberLarge">{params.numUserLabels}</div>
+      <div className="numberLarge">{params.numLabellingsRequired}</div>
       <div className="description">Labellings required</div>
     </div>
     <div className="controls">
-      <span className="icon iconEdit" title="Edit" />
+      <span className="icon iconEdit" title="Edit" onClick={() => params.onEdit(params.id)} />
       <span className="icon iconDownload" title="Download" />
-      <span className="icon iconLabel" title="Label data" />
+      <Link to={"/label/" + params.id}>
+        <span className="icon iconLabel" title="Label data" />
+      </Link>
     </div>
   </div>
 )

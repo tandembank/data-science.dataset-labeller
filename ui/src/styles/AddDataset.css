@@ -6,6 +6,11 @@
   align-items: center;
 }
 
+.AddDataset .Spinner {
+  margin: 0 auto;
+  display: block;
+}
+
 .AddDataset .startAction {
   display: flex;
   justify-content: center;

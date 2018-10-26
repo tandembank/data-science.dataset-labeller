@@ -76,7 +76,7 @@ export default class LoginContainer extends React.Component {
   
   render() {
     if (this.state.ready) {
-      return <Login errors={this.state.errors} onChange={(key, val) => this.onChange(key, val)} onSubmit={(e) => this.onSubmit(e)} usernameFieldRef={this.usernameFieldRef} />
+      return <Login message={this.props.message} errors={this.state.errors} onChange={(key, val) => this.onChange(key, val)} onSubmit={(e) => this.onSubmit(e)} usernameFieldRef={this.usernameFieldRef} />
     }
     else {
       return <Spinner />

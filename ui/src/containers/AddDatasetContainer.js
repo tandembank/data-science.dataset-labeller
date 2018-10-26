@@ -12,6 +12,7 @@ export default class AddDatasetContainer extends React.Component {
       csvUploaded:  props.csvUploaded,
       saving:       props.saving,
 
+      id:                     props.id,
       name:                   props.name,
       fields:                 props.fields,
       labels:                 this.ensureLabelIds(props.labels),
@@ -290,6 +291,7 @@ export default class AddDatasetContainer extends React.Component {
       started={this.state.started}
       csvUploaded={this.state.csvUploaded}
       saving={this.state.saving}
+      id={this.state.id}
       name={this.state.name}
       fields={this.state.fields}
       labels={this.state.labels}
