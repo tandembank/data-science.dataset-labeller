@@ -8,7 +8,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.middleware.csrf import get_token
 
-from .models import Dataset, Label
+from .models import Dataset, Label, Datapoint
 
 
 def index(request):
@@ -91,8 +91,32 @@ def datasets(request):
         }
         return JsonResponse(responseData)
 
-def datapoints(request):
-    import pdb; pdb.set_trace()
+
+def labels(request, dataset_id):
+    labels = [{'id': label.id, 'name': label.name, 'shortcut': label.shortcut} for label in Dataset.objects.get(id=dataset_id).labels.all()]
+    responseData = {
+        'labels': labels
+    }
+    return JsonResponse(responseData)
+
+
+def datapoints(request, dataset_id, limit=3):
+    dataset = Dataset.objects.get(id=dataset_id)
+    result_datapoints = []
+    for datapoint in dataset.datapoints_for_user(request.user)[:limit]:
+        decoded_data = json.loads(datapoint.data)
+        response_datapoint = []
+        for key in json.loads(dataset.display_fields):
+            response_datapoint.append({
+                'key': key,
+                'value': decoded_data[key],
+            })
+        result_datapoints.append(response_datapoint)
+    responseData = {
+        'datapoints': result_datapoints
+    }
+    return JsonResponse(responseData)
+
 
 def csv_upload(request):
     # Read and detect CSV format

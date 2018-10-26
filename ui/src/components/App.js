@@ -39,7 +39,7 @@ export default class App extends React.Component {
     return (
       <Router>
         <div className="App">
-          <img src={logo} className="App-logo" alt=" " />
+          <Link to="/"><img src={logo} className="App-logo" alt=" " /></Link>
           <span style={{marginLeft: '40px', color: '#fff'}}>Logged in: {this.props.loggedIn ? 'YES' : 'NO'}</span>
 
           {/* <ul>

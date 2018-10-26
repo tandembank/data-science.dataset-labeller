@@ -48,6 +48,14 @@ class Dataset(models.Model):
         num_labellings_required = UserLabel.objects.filter(label__dataset=self).count()
         return num_labellings_required / num_final_user_labels
 
+    def datapoints_for_user(self, user):
+        # Gets the remaining Datapoints that are available to be labelled by a user (excluding ones the user has already labelled or have enough labels to cover num_labellings_required)
+        datapoints = self.datapoints \
+            .exclude(user_labels__user=user) \
+            .annotate(count=Count('user_labels')) \
+            .filter(count__lt=self.num_labellings_required)
+        return datapoints
+
 
 class Datapoint(models.Model):
     dataset = models.ForeignKey(Dataset, on_delete='CASCADE', related_name='datapoints')
