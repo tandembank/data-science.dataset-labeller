@@ -81,7 +81,7 @@ const Home = (params, otherParams) => {
 
 const Login = () => (
   <div className="App-content">
-    <LoginContainer message="Hello" />
+    <LoginContainer />
   </div>
 )
 

@@ -101,17 +101,26 @@ def labels(request, dataset_id):
     return JsonResponse(responseData)
 
 
-def datapoints(request, dataset_id, limit=3):
+def datapoints(request, dataset_id, limit=5):
     dataset = Dataset.objects.get(id=dataset_id)
     result_datapoints = []
     for datapoint in dataset.datapoints_for_user(request.user)[:limit]:
-        decoded_data = json.loads(datapoint.data)
-        response_datapoint = []
-        for key in json.loads(dataset.display_fields):
-            response_datapoint.append({
-                'key': key,
-                'value': decoded_data[key],
+        datapoint_data = json.loads(datapoint.data)
+        features = []
+        for fieldname in json.loads(dataset.display_fields):
+            value = datapoint_data[fieldname]
+            try:
+                value = json.loads(value)
+            except:
+                pass
+            features.append({
+                'key': fieldname,
+                'value': value,
             })
+        response_datapoint = {
+            'id': datapoint.id,
+            'data': features,
+        }
         result_datapoints.append(response_datapoint)
     responseData = {
         'datapoints': result_datapoints,
@@ -122,6 +131,7 @@ def datapoints(request, dataset_id, limit=3):
 @csrf_exempt
 def assign_label(request, datapoint_id):
     label_id = int(request.POST['label_id'])
+    assert UserLabel.objects.filter(user=request.user, datapoint_id=datapoint_id).count() == 0
     UserLabel.objects.create(user=request.user, datapoint_id=datapoint_id, label_id=label_id)
     responseData = {
         'status': 'OK',

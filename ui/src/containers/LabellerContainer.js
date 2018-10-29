@@ -20,6 +20,8 @@ export default class LabellerContainer extends React.Component {
       this.fetchLabels()
       this.fetchDatapoints()
     })
+
+    document.onkeydown = (e) => this.checkKey(e)
   }
 
   fetchLabels = async () => {
@@ -41,12 +43,13 @@ export default class LabellerContainer extends React.Component {
   }
 
   fetchDatapoints = async () => {
+    console.log('fetching datapoints')
     try {
       const response = await fetch(`/api/datapoints/${this.state.datasetId}/`)
       if (response.ok) {
         const responseBody = await response.json()
         this.setState({
-          datapoints: responseBody.datapoints,
+          datapoints: this.state.datapoints.concat(responseBody.datapoints),
           currentDatapoint: responseBody.datapoints[0],
         })
       }
@@ -59,25 +62,66 @@ export default class LabellerContainer extends React.Component {
     }
   }
 
-  onSelectLabel = async (id) => {
+  onSelectLabel = async (data) => {
+    const datapointId = data.datapointId
+    const labelId = data.labelId
+
     let formData = new FormData()
-    formData.append('label_id', id)
+    formData.append('label_id', labelId)
 
     try {
-      const response = await fetch(`/api/assign-label/${this.state.datasetId}/`, {
+      const response = await fetch(`/api/assign-label/${datapointId}/`, {
         method: 'post',
         body: formData,
       })
-      if (response.ok) {
-        const responseBody = await response.json()
-        // TODO: Move onto the next one
-      }
-      else {
+      if (!response.ok) {
         throw new Error('Post Failed')
       }
     }
     catch(error) {
       console.log('Request failed', error)
+      alert('Failed to save')
+    }
+
+    let datapoints = this.state.datapoints
+    datapoints.splice(0, 1)
+    this.setState({
+      datapoints: datapoints,
+      currentDatapoint: datapoints[0],
+    })
+    if (datapoints.length <= 2) {
+      this.fetchDatapoints()
+    }
+  }
+
+  checkKey = (e) => {
+    e = e || window.event;
+    let label = null
+
+    // If only 2 labels then allow left and right arrow keys to be used
+    if (this.state.labels.length === 2) {
+      if (e.keyCode == '37') {
+        label = this.state.labels[0]
+      }
+      else if (e.keyCode == '39') {
+        label = this.state.labels[1]
+      }
+    }
+    // Match keycode to label.shortcut
+    if (!label) {
+      let key = String.fromCharCode(e.keyCode)
+      const labels = this.state.labels.map((label) => {return label.shortcut})
+      const matchedIndex = labels.indexOf(key)
+      if (matchedIndex > -1) {
+        label = this.state.labels[matchedIndex]
+      }
+    }
+
+    if (label) {
+      this.onSelectLabel({
+        datapointId: this.state.currentDatapoint.id,
+        labelId: label.id,
+      })
     }
   }
 

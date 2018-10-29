@@ -6,7 +6,8 @@ import '../styles/Labeller.css'
 const Labeller = params => (
   <div className="Labeller">
     <LabellerDetailContainer
-      data={params.datapoint}
+      datapointId={params.datapoint.id}
+      data={params.datapoint.data}
       labels={params.labels}
       onSelectLabel={params.onSelectLabel}
     />

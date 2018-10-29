@@ -27,7 +27,7 @@ export default class DatasetsContainer extends React.Component {
         return {
           id: dataset.id,
           name: dataset.name,
-          percentComplete: dataset.labelling_complete,
+          percentComplete: dataset.labelling_complete * 100,
           createdBy: '',
           createdAt: '',
           numDatapoints: dataset.num_datapoints,
@@ -47,17 +47,12 @@ export default class DatasetsContainer extends React.Component {
   onEdit = (id) => {
     this.setState({datasetEditing: id})
   }
-
-  onLabel = (id) => {
-    
-  }
   
   render() {
     return <Datasets
       loading={this.state.loading}
       datasets={this.state.datasets}
       datasetEditing={this.state.datasetEditing}
-      onEdit={this.onEdit}
-      onLabel={this.onLabel} />
+      onEdit={this.onEdit} />
   }
 }

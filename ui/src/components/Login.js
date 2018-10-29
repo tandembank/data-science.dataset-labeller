@@ -4,7 +4,6 @@ import '../styles/Login.css'
 
 const Login = (params) => (
   <div className="Login">
-    {params.message}
     <form>
       <ul>
         <li>
