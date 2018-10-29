@@ -65,6 +65,9 @@ class Dataset(UUIDModel, VersionedModel):
     created_by              = models.ForeignKey(User, on_delete='PROTECT')
     objects                 = DatasetManager()
 
+    class Meta:
+        ordering = ['created_at']
+
     def __str__(self):
         return self.name
 
@@ -86,6 +89,9 @@ class Datapoint(UUIDModel, VersionedModel):
     dataset = models.ForeignKey(Dataset, on_delete='CASCADE', related_name='datapoints')
     index   = models.IntegerField()
     data    = models.TextField()
+
+    class Meta:
+        ordering = ['index']
 
     def __str__(self):
         return '{}: {}: {}'.format(self.dataset.name, self.index, self.data)
@@ -118,6 +124,9 @@ class Label(UUIDModel, VersionedModel):
     index       = models.PositiveSmallIntegerField(default=0)
 
     unique_together = (('dataset', 'name'), ('dataset', 'shortcut'))
+
+    class Meta:
+        ordering = ['index']
 
     def __str__(self):
         return '{}: {} ({})'.format(self.dataset.name, self.name, self.index)
