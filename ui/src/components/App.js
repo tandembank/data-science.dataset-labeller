@@ -40,7 +40,7 @@ export default class App extends React.Component {
       <Router>
         <div className="App">
           <Link to="/"><img src={logo} className="App-logo" alt=" " /></Link>
-          <span style={{marginLeft: '40px', color: '#fff'}}>Logged in: {this.props.loggedIn ? 'YES' : 'NO'}</span>
+          {/* <span style={{marginLeft: '40px', color: '#fff'}}>Logged in: {this.props.loggedIn ? 'YES' : 'NO'}</span> */}
 
           {/* <ul>
             <li>
@@ -57,7 +57,7 @@ export default class App extends React.Component {
           <this.PrivateRoute exact path="/" component={Home} />
           <Route path="/components" component={Components} />
           <Route path="/login" component={Login} />
-          <Route path="/label" component={Label} />
+          <Route path="/label/:id" component={Label} />
           <Route path="/about" component={About} />
           <Route path="/topics" component={Topics} />
         </div>
@@ -85,11 +85,13 @@ const Login = () => (
   </div>
 )
 
-const Label = () => (
-  <div className="App-content">
-    <LabellerContainer datasetId={1} />
-  </div>
-)
+const Label = ({match}) => {
+  return (
+    <div className="App-content">
+      <LabellerContainer datasetId={match.params.id} />
+    </div>
+  )
+}
 
 const About = () => (
   <div>

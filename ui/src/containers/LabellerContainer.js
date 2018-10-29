@@ -100,10 +100,10 @@ export default class LabellerContainer extends React.Component {
 
     // If only 2 labels then allow left and right arrow keys to be used
     if (this.state.labels.length === 2) {
-      if (e.keyCode == '37') {
+      if (e.keyCode === 37) {
         label = this.state.labels[0]
       }
-      else if (e.keyCode == '39') {
+      else if (e.keyCode === 39) {
         label = this.state.labels[1]
       }
     }

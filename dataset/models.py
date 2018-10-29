@@ -1,14 +1,38 @@
 import json
 import operator
+import uuid
 
+from django.contrib.auth.models import User
 from django.db import models, transaction
 from django.db.models import Count
-from django.contrib.auth.models import User
+from django.utils import timezone
+
+
+class UUIDModel(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    class Meta:
+        abstract = True
+
+
+class VersionedModel(models.Model):
+    created_at = models.DateTimeField(blank=True)
+    updated_at = models.DateTimeField(blank=True)
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        now = timezone.now()
+        if not self.created_at:
+            self.created_at = now
+        self.updated_at = now
+        super(VersionedModel, self).save()
 
 
 class DatasetManager(models.Manager):
     @transaction.atomic
-    def create_from_list(self, name, data, display_fields=None, num_labellings_required=None):
+    def create_from_list(self, name, data, display_fields=None, num_labellings_required=None, created_by=None):
         # Work out what feature fields are used from the first 1000 datapoints (rows)
         fields = {}
         for row in data[:1000]:
@@ -23,7 +47,7 @@ class DatasetManager(models.Manager):
             num_labellings_required = 3
 
         # Create the Dataset object
-        ds = self.create(name=name, fields=fields, display_fields=display_fields, num_labellings_required=num_labellings_required)
+        ds = self.create(name=name, fields=fields, display_fields=display_fields, num_labellings_required=num_labellings_required, created_by=created_by)
 
         # Add a Datapoint for each row
         for i, row in enumerate(data):
@@ -32,12 +56,13 @@ class DatasetManager(models.Manager):
         return ds
 
 
-class Dataset(models.Model):
+class Dataset(UUIDModel, VersionedModel):
     name                    = models.CharField(max_length=200, unique=True)
     fields                  = models.TextField()
     display_fields          = models.TextField()
     num_labellings_required = models.IntegerField()
     multiple_labels         = models.BooleanField(default=False)
+    created_by              = models.ForeignKey(User, on_delete='PROTECT')
     objects                 = DatasetManager()
 
     def __str__(self):
@@ -57,7 +82,7 @@ class Dataset(models.Model):
         return datapoints
 
 
-class Datapoint(models.Model):
+class Datapoint(UUIDModel, VersionedModel):
     dataset = models.ForeignKey(Dataset, on_delete='CASCADE', related_name='datapoints')
     index   = models.IntegerField()
     data    = models.TextField()
@@ -86,7 +111,7 @@ class Datapoint(models.Model):
         return determined
 
 
-class Label(models.Model):
+class Label(UUIDModel, VersionedModel):
     dataset     = models.ForeignKey(Dataset, on_delete='CASCADE', related_name='labels')
     name        = models.CharField(max_length=200)
     shortcut    = models.CharField(max_length=10)
@@ -98,7 +123,7 @@ class Label(models.Model):
         return '{}: {} ({})'.format(self.dataset.name, self.name, self.index)
 
 
-class UserLabel(models.Model):
+class UserLabel(UUIDModel, VersionedModel):
     user        = models.ForeignKey(User, on_delete='CASCADE')
     datapoint   = models.ForeignKey(Datapoint, on_delete='CASCADE', related_name='user_labels')
     label       = models.ForeignKey(Label, on_delete='CASCADE')

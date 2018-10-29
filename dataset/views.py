@@ -44,14 +44,16 @@ def datasets(request):
                 fields.append(insertField)
 
             datasets.append({
-                'id':                       dataset.id,
+                'id':                       str(dataset.id),
                 'name':                     dataset.name,
                 'fields':                   fields,
-                'labels':                   [{'name': label.name, 'shortcut': label.shortcut, 'id': label.id} for label in dataset.labels.all()],
+                'labels':                   [{'name': label.name, 'shortcut': label.shortcut, 'id': str(label.id)} for label in dataset.labels.all()],
                 'multiple_labels':          dataset.multiple_labels,
                 'num_labellings_required':  dataset.num_labellings_required,
                 'num_datapoints':           dataset.datapoints.count(),
                 'labelling_complete':       dataset.labelling_complete(),
+                'created_at':               dataset.created_at,
+                'created_by':               dataset.created_by.username,
             })
 
         responseData = {
@@ -75,7 +77,8 @@ def datasets(request):
             name=data['name'],
             data=rows,
             display_fields=json.dumps(data['display_fields']),
-            num_labellings_required=data['num_labellings_required']
+            num_labellings_required=data['num_labellings_required'],
+            created_by=request.user
         )
         dataset.save()
 
@@ -88,13 +91,13 @@ def datasets(request):
 
         responseData = {
             'status':   'OK',
-            'id':       dataset.id,
+            'id':       str(dataset.id),
         }
         return JsonResponse(responseData)
 
 
 def labels(request, dataset_id):
-    labels = [{'id': label.id, 'name': label.name, 'shortcut': label.shortcut} for label in Dataset.objects.get(id=dataset_id).labels.all()]
+    labels = [{'id': str(label.id), 'name': label.name, 'shortcut': label.shortcut} for label in Dataset.objects.get(id=dataset_id).labels.all()]
     responseData = {
         'labels': labels
     }
@@ -118,7 +121,7 @@ def datapoints(request, dataset_id, limit=5):
                 'value': value,
             })
         response_datapoint = {
-            'id': datapoint.id,
+            'id': str(datapoint.id),
             'data': features,
         }
         result_datapoints.append(response_datapoint)
@@ -130,7 +133,7 @@ def datapoints(request, dataset_id, limit=5):
 
 @csrf_exempt
 def assign_label(request, datapoint_id):
-    label_id = int(request.POST['label_id'])
+    label_id = request.POST['label_id']
     assert UserLabel.objects.filter(user=request.user, datapoint_id=datapoint_id).count() == 0
     UserLabel.objects.create(user=request.user, datapoint_id=datapoint_id, label_id=label_id)
     responseData = {
