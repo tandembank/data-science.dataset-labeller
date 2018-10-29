@@ -1,3 +1,8 @@
+volumes
+docker-compose.yml
+sample_data
+designs
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

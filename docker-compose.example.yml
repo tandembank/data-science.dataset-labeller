@@ -1,0 +1,23 @@
+version: "3"
+services:
+  mysql:
+    container_name: dl-mysql
+    image: mysql:5.7.24
+    restart: always
+    volumes:
+      - ~/volumes/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+  datasetlabeller:
+    container_name: dl-web
+    build: .
+    restart: always
+    ports:
+      - "8080:80"
+      - "8081:8000"
+    environment:
+      ENV: prd
+      MYSQL_NAME: datasetlabeller
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret

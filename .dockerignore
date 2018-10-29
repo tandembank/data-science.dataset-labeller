@@ -1,0 +1,7 @@
+.git
+.pytest_cache
+db.sqlite3
+ui/node_modules
+designs
+sample_data
+volumes
