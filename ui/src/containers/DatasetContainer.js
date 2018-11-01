@@ -18,6 +18,8 @@ export default class DatasetContainer extends React.Component {
       numDatapoints={this.props.numDatapoints}
       numLabels={this.props.numLabels}
       numLabellingsRequired={this.props.numLabellingsRequired}
+      numTotalLabellingsRequired={this.props.numTotalLabellingsRequired}
+      numLabellingsCompleted={this.props.numLabellingsCompleted}
       onEdit={this.props.onEdit}
       onLabel={this.props.onLabel} />
   }

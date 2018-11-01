@@ -22,6 +22,8 @@ const Datasets = params => (
             labels={dataset.labels}
             multipleLabels={dataset.multipleLabels}
             numLabellingsRequired={dataset.numLabellingsRequired}
+            numTotalLabellingsRequired={dataset.numTotalLabellingsRequired}
+            numLabellingsCompleted={dataset.numLabellingsCompleted}
             numDatapoints={dataset.numDatapoints} />
         }
         else {
@@ -35,6 +37,8 @@ const Datasets = params => (
             numDatapoints={dataset.numDatapoints}
             numLabels={dataset.labels.length}
             numLabellingsRequired={dataset.numLabellingsRequired}
+            numTotalLabellingsRequired={dataset.numTotalLabellingsRequired}
+            numLabellingsCompleted={dataset.numLabellingsCompleted}
             onEdit={params.onEdit} />
         }
       })

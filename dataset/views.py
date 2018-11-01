@@ -44,16 +44,18 @@ def datasets(request):
                 fields.append(insertField)
 
             datasets.append({
-                'id':                       str(dataset.id),
-                'name':                     dataset.name,
-                'fields':                   fields,
-                'labels':                   [{'name': label.name, 'shortcut': label.shortcut, 'id': str(label.id)} for label in dataset.labels.all()],
-                'multiple_labels':          dataset.multiple_labels,
-                'num_labellings_required':  dataset.num_labellings_required,
-                'num_datapoints':           dataset.datapoints.count(),
-                'labelling_complete':       dataset.labelling_complete(),
-                'created_at':               dataset.created_at,
-                'created_by':               dataset.created_by.username,
+                'id':                               str(dataset.id),
+                'name':                             dataset.name,
+                'fields':                           fields,
+                'labels':                           [{'name': label.name, 'shortcut': label.shortcut, 'id': str(label.id)} for label in dataset.labels.all()],
+                'multiple_labels':                  dataset.multiple_labels,
+                'num_datapoints':                   dataset.datapoints.count(),
+                'num_labellings_required':          dataset.num_labellings_required,
+                'num_total_labellings_required':    dataset.num_total_labellings_required,
+                'num_labellings_completed':         dataset.num_labellings_completed,
+                'labelling_complete':               dataset.labelling_complete,
+                'created_at':                       dataset.created_at,
+                'created_by':                       dataset.created_by.username,
             })
 
         responseData = {

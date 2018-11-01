@@ -71,10 +71,17 @@ class Dataset(UUIDModel, VersionedModel):
     def __str__(self):
         return self.name
 
+    @property
+    def num_total_labellings_required(self):
+        return self.datapoints.count() * self.num_labellings_required
+
+    @property
+    def num_labellings_completed(self):
+        return UserLabel.objects.filter(label__dataset=self).count()
+
+    @property
     def labelling_complete(self):
-        num_final_user_labels = self.datapoints.count() * self.num_labellings_required
-        num_labellings_required = UserLabel.objects.filter(label__dataset=self).count()
-        return num_labellings_required / num_final_user_labels
+        return self.num_labellings_completed / self.num_total_labellings_required
 
     def datapoints_for_user(self, user):
         # Gets the remaining Datapoints that are available to be labelled by a user (excluding ones the user has already labelled or have enough labels to cover num_labellings_required)

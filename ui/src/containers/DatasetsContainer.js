@@ -35,6 +35,8 @@ export default class DatasetsContainer extends React.Component {
           labels: dataset.labels,
           multipleLabels: dataset.multiple_labels,
           numLabellingsRequired: dataset.num_labellings_required,
+          numTotalLabellingsRequired: dataset.num_total_labellings_required,
+          numLabellingsCompleted: dataset.num_labellings_completed,
         }
       })
       this.setState({datasets: datasets, loading: false})

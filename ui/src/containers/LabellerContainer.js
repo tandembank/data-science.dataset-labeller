@@ -48,8 +48,15 @@ export default class LabellerContainer extends React.Component {
       const response = await fetch(`/api/datapoints/${this.state.datasetId}/`)
       if (response.ok) {
         const responseBody = await response.json()
+        let newDatapoints = responseBody.datapoints
+        // Ensure the existing datapoint are in the new list
+        for (let oldDatapoint of this.state.datapoints) {
+          if (newDatapoints.map((item) => {return item.id}).indexOf(oldDatapoint.id) < -1) {
+            newDatapoints.splice(0, 0, oldDatapoint)
+          }
+        }
         this.setState({
-          datapoints: this.state.datapoints.concat(responseBody.datapoints),
+          datapoints: responseBody.datapoints,
           currentDatapoint: responseBody.datapoints[0],
         })
       }

@@ -6,7 +6,7 @@ import '../styles/Dataset.css'
 
 const Dataset = params => (
   <div className="Dataset">
-    <div className="donut">
+    <div className="donut" title={params.percentComplete.toFixed(2) + `%\n` + params.numLabellingsCompleted + ' / ' + params.numTotalLabellingsRequired}>
       <Donut percent={params.percentComplete} />
     </div>
     <div className="title">
