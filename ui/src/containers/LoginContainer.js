@@ -1,9 +1,9 @@
 import React from 'react'
+import { withRouter } from "react-router-dom";
 import Login from '../components/Login'
-import Spinner from '../components/Spinner'
 
 
-export default class LoginContainer extends React.Component {
+class LoginContainer extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -53,33 +53,31 @@ export default class LoginContainer extends React.Component {
     formData.append('password', this.state.data.password)
     formData.append('csrfmiddlewaretoken', this.state.csrftoken)
 
-    setTimeout(() => {
-      fetch('/accounts/login/', {
-        method: 'post',
-        redirect: 'manual',
-        body: formData,
-      })
-      .then((response) => {
-        if (response.status === 0) {
-          this.props.onLoggedIn()
-        }
-        else {
-          throw new Error('Login Failed')
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-        this.setState({ready: true})
-      })
-    }, 500)
+    fetch('/accounts/login/', {
+      method: 'post',
+      redirect: 'manual',
+      body: formData,
+    })
+    .then((response) => {
+      if (response.status === 0) {
+        this.props.onLoggedIn()
+        setTimeout(() => {
+          this.props.history.push('/')
+        }, 500)
+      }
+      else {
+        throw new Error('Login Failed')
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+      this.setState({ready: true})
+    })
   }
   
   render() {
-    if (this.state.ready) {
-      return <Login errors={this.state.errors} onChange={(key, val) => this.onChange(key, val)} onSubmit={(e) => this.onSubmit(e)} usernameFieldRef={this.usernameFieldRef} />
-    }
-    else {
-      return <Spinner />
-    }
+      return <Login loading={!this.state.ready} errors={this.state.errors} onChange={(key, val) => this.onChange(key, val)} onSubmit={(e) => this.onSubmit(e)} usernameFieldRef={this.usernameFieldRef} />
   }
 }
+
+export default withRouter(LoginContainer);

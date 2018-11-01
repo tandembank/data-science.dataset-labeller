@@ -9,7 +9,7 @@ const Datasets = params => (
   <div className="Datasets">
     {params.loading ?
       <div className="AddDataset"><Spinner /></div>
-      :
+    :
       params.datasets.map((dataset) => {
         if (dataset.id === params.datasetEditing) {
           return <AddDatasetContainer

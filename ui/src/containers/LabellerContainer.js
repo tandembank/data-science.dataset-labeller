@@ -43,7 +43,6 @@ export default class LabellerContainer extends React.Component {
   }
 
   fetchDatapoints = async () => {
-    console.log('fetching datapoints')
     try {
       const response = await fetch(`/api/datapoints/${this.state.datasetId}/`)
       if (response.ok) {

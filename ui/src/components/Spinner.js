@@ -1,5 +1,5 @@
-import spinner from '../images/spinner.svg'
 import React from 'react'
+import spinner from '../images/spinner.svg'
 
 
 const Spinner = params => (

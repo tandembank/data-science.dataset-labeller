@@ -4,6 +4,7 @@ import json
 import tempfile
 from time import sleep
 
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.middleware.csrf import get_token
 from django.shortcuts import render
@@ -27,6 +28,7 @@ def csrf_token(request):
     return JsonResponse(data)
 
 
+@login_required
 def datasets(request):
     if request.method == 'GET':
         datasets = []
@@ -98,6 +100,7 @@ def datasets(request):
         return JsonResponse(responseData)
 
 
+@login_required
 def labels(request, dataset_id):
     labels = [{'id': str(label.id), 'name': label.name, 'shortcut': label.shortcut} for label in Dataset.objects.get(id=dataset_id).labels.all()]
     responseData = {
@@ -106,6 +109,7 @@ def labels(request, dataset_id):
     return JsonResponse(responseData)
 
 
+@login_required
 def datapoints(request, dataset_id, limit=5):
     dataset = Dataset.objects.get(id=dataset_id)
     result_datapoints = []
@@ -144,6 +148,7 @@ def assign_label(request, datapoint_id):
     return JsonResponse(responseData)
 
 
+@login_required
 def csv_upload(request):
     # Read and detect CSV format
     file = request.FILES['file']

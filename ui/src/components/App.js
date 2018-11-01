@@ -12,27 +12,25 @@ import '../styles/App.css'
 
 export default class App extends React.Component {
   PrivateRoute = ({ component: Component, ...rest }) => {
-    // console.log('this.props.loggedIn: ' + this.props.loggedIn)
-    // while (this.props.loggedIn == undefined) {
-    //   console.log('waiting')
-    // }
     return (
       <Route
         {...rest}
-        render={props =>
-          this.props.loggedIn ? (
-            <Component {...props} />
-          ) : (
-            <Redirect
+        render={props => {
+          if (this.props.loggedIn) {
+            return <Component {...props} />
+          }
+          else if (this.props.loggedIn === false) {
+            return <Redirect
               to={{
                 pathname: "/login",
                 state: { from: props.location }
               }}
             />
-          )
-        }
+          }
+          return null
+        }}
       />
-    );
+    )
   }
 
   render() {
@@ -56,7 +54,7 @@ export default class App extends React.Component {
 
           <this.PrivateRoute exact path="/" component={Home} />
           <Route path="/components" component={Components} />
-          <Route path="/login" component={Login} />
+          <Route path="/login" render={(props) => <Login onLoggedIn={this.props.onLoggedIn} />} />
           <Route path="/label/:id" component={Label} />
           <Route path="/about" component={About} />
           <Route path="/topics" component={Topics} />
@@ -79,9 +77,9 @@ const Home = (params, otherParams) => {
   )
 }
 
-const Login = () => (
+const Login = (params) => (
   <div className="App-content">
-    <LoginContainer />
+    <LoginContainer onLoggedIn={params.onLoggedIn} />
   </div>
 )
 
