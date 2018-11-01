@@ -15,6 +15,11 @@ export default class LabellerDetail extends React.Component {
     let params = this.props
     return (
       <div className="LabellerDetail">
+        {params.undoAvailable ?
+          <div className="undo" onClick={() => params.onUndo()} title="Undo [Backspace]"><span className="icon iconUndo" />Undo</div>
+        :
+          <div className="undo">&nbsp;</div>
+        }
         <div className="card">
           {
             params.data.map((item) => {
@@ -36,7 +41,6 @@ export default class LabellerDetail extends React.Component {
         <ul className="options">
           {
             params.labels.map((label) => {
-              // debugger
               console.log(params.datapointId)
               return (
                 // <li key={label.name} onClick={() => params.onSelectLabel(params.datapointId, label.id)}>

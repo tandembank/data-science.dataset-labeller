@@ -10,6 +10,7 @@ export default class LabellerContainer extends React.Component {
       labels: [],
       datapoints: [],
       currentDatapoint: null,
+      previousDatapoint: null,
     }
   }
 
@@ -94,15 +95,31 @@ export default class LabellerContainer extends React.Component {
     this.setState({
       datapoints: datapoints,
       currentDatapoint: datapoints[0],
+      previousDatapoint: this.state.currentDatapoint,
     })
     if (datapoints.length <= 2) {
       this.fetchDatapoints()
     }
   }
 
+  onUndo = () => {
+    let datapoints = this.state.datapoints
+    this.state.datapoints.splice(0, 0, this.state.previousDatapoint)
+    this.setState({
+      datapoints: datapoints,
+      currentDatapoint: this.state.previousDatapoint,
+      previousDatapoint: null,
+    })
+  }
+
   checkKey = (e) => {
     e = e || window.event;
     let label = null
+
+    // Undo if backspace is pressed
+    if (e.keyCode === 8) {
+      this.onUndo()
+    }
 
     // If only 2 labels then allow left and right arrow keys to be used
     if (this.state.labels.length === 2) {
@@ -138,6 +155,8 @@ export default class LabellerContainer extends React.Component {
         datapoint={this.state.currentDatapoint}
         labels={this.state.labels}
         onSelectLabel={this.onSelectLabel}
+        undoAvailable={this.state.previousDatapoint ? true : false}
+        onUndo={() => this.onUndo()}
       />
     }
     return <span></span>

@@ -1,8 +1,25 @@
 .LabellerDetail {
-  padding: 20px;
   margin-bottom: 40px;
   justify-content: center;
   align-items: center;
+}
+
+.LabellerDetail .undo {
+  margin-bottom: 40px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+.LabellerDetail .undo:hover {
+  color: #fff;
+}
+.LabellerDetail .undo:hover .icon {
+  background-color: #fff;
+}
+
+.LabellerDetail .iconUndo {
+  mask-image: url(../images/undo.svg);
+  margin-right: 10px
 }
 
 .LabellerDetail .card {

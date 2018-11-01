@@ -14,6 +14,8 @@ export default class LabellerDetailContainer extends React.Component {
       data={this.props.data}
       labels={this.props.labels}
       onSelectLabel={this.props.onSelectLabel}
+      undoAvailable={this.props.undoAvailable}
+      onUndo={this.props.onUndo}
     />
   }
 }

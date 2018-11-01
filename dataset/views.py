@@ -1,4 +1,5 @@
 import csv
+from datetime import timedelta
 from io import StringIO
 import json
 import tempfile
@@ -8,9 +9,13 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.middleware.csrf import get_token
 from django.shortcuts import render
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import Dataset, Datapoint, Label, UserLabel
+
+
+UNDO_WINDOW_SECONDS = 60 * 15
 
 
 def index(request):
@@ -140,7 +145,18 @@ def datapoints(request, dataset_id, limit=5):
 @csrf_exempt
 def assign_label(request, datapoint_id):
     label_id = request.POST['label_id']
+
+    # User is allowed to undo and re-label a Datapoint as long as it's within the time window
+    UserLabel.objects.filter(
+        user=request.user,
+        datapoint_id=datapoint_id,
+        created_at__gte=timezone.now() - timedelta(seconds=UNDO_WINDOW_SECONDS)
+    ).delete()
+
+    # If the assertion failes then the time window must have passed
     assert UserLabel.objects.filter(user=request.user, datapoint_id=datapoint_id).count() == 0
+
+    # Assign the actual label
     UserLabel.objects.create(user=request.user, datapoint_id=datapoint_id, label_id=label_id)
     responseData = {
         'status': 'OK',

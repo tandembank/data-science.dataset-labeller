@@ -40,24 +40,10 @@ export default class App extends React.Component {
           <Link to="/"><img src={logo} className="App-logo" alt=" " /></Link>
           {/* <span style={{marginLeft: '40px', color: '#fff'}}>Logged in: {this.props.loggedIn ? 'YES' : 'NO'}</span> */}
 
-          {/* <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/about">About</Link>
-            </li>
-            <li>
-              <Link to="/topics">Topics</Link>
-            </li>
-          </ul> */}
-
           <this.PrivateRoute exact path="/" component={Home} />
           <Route path="/components" component={Components} />
           <Route path="/login" render={(props) => <Login onLoggedIn={this.props.onLoggedIn} />} />
           <Route path="/label/:id" component={Label} />
-          <Route path="/about" component={About} />
-          <Route path="/topics" component={Topics} />
         </div>
       </Router>
     )
@@ -68,9 +54,7 @@ export default class App extends React.Component {
 const Home = (params, otherParams) => {
   return (
     <div>
-      {/* <img src={spinner} className="App-logo" alt=" " /> */}
       <div className="App-content">
-        {/* {content(params)} */}
         <DatasetsContainer />
       </div>
     </div>
@@ -90,43 +74,6 @@ const Label = ({match}) => {
     </div>
   )
 }
-
-const About = () => (
-  <div>
-    <h2>About</h2>
-  </div>
-)
-
-const Topics = ({ match }) => (
-  <div>
-    <h2>Topics</h2>
-    <ul>
-      <li>
-        <Link to={`${match.url}/rendering`}>Rendering with React</Link>
-      </li>
-      <li>
-        <Link to={`${match.url}/components`}>Components</Link>
-      </li>
-      <li>
-        <Link to={`${match.url}/props-v-state`}>Props v. State</Link>
-      </li>
-    </ul>
-
-    <Route path={`${match.path}/:topicId`} component={Topic} />
-    <Route
-      exact
-      path={match.path}
-      render={() => <h3>Please select a topic.</h3>}
-    />
-  </div>
-)
-
-const Topic = ({ match }) => (
-  <div>
-    <h3>{match.params.topicId}</h3>
-  </div>
-)
-
 const Components = ({ match }) => (
   <div className="App-content">
     <div>

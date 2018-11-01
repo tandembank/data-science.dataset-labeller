@@ -10,6 +10,8 @@ const Labeller = params => (
       data={params.datapoint.data}
       labels={params.labels}
       onSelectLabel={params.onSelectLabel}
+      undoAvailable={params.undoAvailable}
+      onUndo={params.onUndo}
     />
   </div>
 )
