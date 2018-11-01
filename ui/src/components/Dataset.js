@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Donut from '../components/Donut'
+import moment from 'moment'
 import '../styles/Dataset.css'
 
 
@@ -11,7 +12,7 @@ const Dataset = params => (
     </div>
     <div className="title">
       <div className="name">{params.name}</div>
-      <div className='createdBy'>Created by {params.createdBy}<br/>On {params.createdAt}</div>
+      <div className='createdBy'>Created by {params.createdBy}<br/>On {moment(params.createdAt).format('Do MMMM YYYY')}</div>
     </div>
     <div className="numDatapoints">
       <div className="numberLarge">{params.numDatapoints}</div>

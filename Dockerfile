@@ -42,8 +42,8 @@ COPY templates /srv/templates
 COPY ui /srv/ui
 COPY manage.py /srv/manage.py
 
-COPY supervisord.conf /etc/supervisord.conf
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY config/supervisord.conf /etc/supervisord.conf
+COPY config/nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /srv/ui
 RUN yarn install
