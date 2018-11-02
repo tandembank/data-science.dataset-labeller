@@ -50,8 +50,7 @@ RUN yarn install
 RUN yarn build
 WORKDIR /srv
 
-
-# RUN pipenv run python manage.py collectstatic --noinput --link
+RUN pipenv run python manage.py collectstatic --noinput --link
 
 CMD supervisord -c /etc/supervisord.conf
 
