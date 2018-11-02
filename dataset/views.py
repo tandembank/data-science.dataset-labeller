@@ -153,8 +153,11 @@ def assign_label(request, datapoint_id):
         created_at__gte=timezone.now() - timedelta(seconds=UNDO_WINDOW_SECONDS)
     ).delete()
 
-    # If the assertion failes then the time window must have passed
+    # If the assertion failes then the user must have previously labelled the Datapoint outside time window
     assert UserLabel.objects.filter(user=request.user, datapoint_id=datapoint_id).count() == 0
+
+    # Make sure there are labellings remaining
+    assert Datapoint.objects.get(id=datapoint_id).num_labellings_remaining > 0
 
     # Assign the actual label
     UserLabel.objects.create(user=request.user, datapoint_id=datapoint_id, label_id=label_id)

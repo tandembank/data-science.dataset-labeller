@@ -123,6 +123,10 @@ class Datapoint(UUIDModel, VersionedModel):
             pass
         return determined
 
+    @property
+    def num_labellings_remaining(self):
+        return self.dataset.num_labellings_required - self.user_labels.count()
+
 
 class Label(UUIDModel, VersionedModel):
     dataset     = models.ForeignKey(Dataset, on_delete='CASCADE', related_name='labels')

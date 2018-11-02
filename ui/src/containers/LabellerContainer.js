@@ -12,6 +12,18 @@ export default class LabellerContainer extends React.Component {
       currentDatapoint: null,
       previousDatapoint: null,
     }
+    this.NUMPAD_MAPPING = {
+      a: '1',
+      b: '2',
+      c: '3',
+      d: '4',
+      e: '5',
+      f: '6',
+      g: '7',
+      h: '8',
+      i: '9',
+      '`': '0',
+    }
   }
 
   componentDidMount = () => {
@@ -133,6 +145,10 @@ export default class LabellerContainer extends React.Component {
     // Match keycode to label.shortcut
     if (!label) {
       let key = String.fromCharCode(e.keyCode)
+      // Numpad numbers map strangely so have to be converted
+      if (key in this.NUMPAD_MAPPING) {
+        key = this.NUMPAD_MAPPING[key]
+      }
       const labels = this.state.labels.map((label) => {return label.shortcut})
       const matchedIndex = labels.indexOf(key)
       if (matchedIndex > -1) {
