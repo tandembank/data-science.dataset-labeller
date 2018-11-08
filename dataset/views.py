@@ -74,30 +74,47 @@ def datasets(request):
 
     else:  # POST data
         data = json.loads(request.POST['data'])
+        id = request.POST.get('id')
 
-        rows = []
-        with open(data['temp_path'], 'r') as fp:
-            dialect = csv.Sniffer().sniff(fp.read(1024))
-            fp.seek(0)
-            reader = csv.DictReader(fp, dialect=dialect)
-            for row in reader:
-                rows.append(row)
+        if not id:  # Newly uploaded dataset
+            rows = []
+            with open(data['temp_path'], 'r') as fp:
+                dialect = csv.Sniffer().sniff(fp.read(1024))
+                fp.seek(0)
+                reader = csv.DictReader(fp, dialect=dialect)
+                for row in reader:
+                    rows.append(row)
 
-        dataset = Dataset.objects.create_from_list(
-            name=data['name'],
-            data=rows,
-            display_fields=json.dumps(data['display_fields']),
-            num_labellings_required=data['num_labellings_required'],
-            created_by=request.user
-        )
-        dataset.save()
+            dataset = Dataset.objects.create_from_list(
+                name=data['name'],
+                data=rows,
+                display_fields=json.dumps(data['display_fields']),
+                num_labellings_required=data['num_labellings_required'],
+                created_by=request.user
+            )
+            dataset.save()
 
-        for i, label in enumerate(data['labels']):
-            Label.objects.create(
-                dataset=dataset,
-                name=label['name'],
-                shortcut=label['shortcut'],
-                index=i)
+            for i, label in enumerate(data['labels']):
+                Label.objects.create(
+                    dataset=dataset,
+                    name=label['name'],
+                    shortcut=label['shortcut'],
+                    index=i)
+
+        else:  # Editing exising dataset (has id)
+            dataset = Dataset.objects.get(id=id)
+            dataset.name = data['name']
+            dataset.display_fields = json.dumps(data['display_fields'])
+            dataset.num_labellings_required = data['num_labellings_required']
+            dataset.save()
+
+            for label_data in data['labels']:
+                if 'id' in label_data:
+                    label = Label.objects.get(id=label_data['id'])
+                    if label_data['name'] != label.name or label_data['shortcut'] != label.shortcut:
+                        label.name = label_data['name']
+                        label.shortcut = label_data['shortcut']
+                        label.save()
 
         responseData = {
             'status':   'OK',

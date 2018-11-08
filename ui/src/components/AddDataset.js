@@ -110,7 +110,12 @@ const label = (item, index, params) => {
 const enterMetadata = (params) => {
   return (
     <div className="enterMetadata">
-      <h2>Creating dataset with {params.numDatapoints} datapoints</h2>
+      {
+        params.id ?
+          <h2>Editing dataset with {params.numDatapoints} datapoints</h2>
+        :
+          <h2>Creating dataset with {params.numDatapoints} datapoints</h2>
+      }
 
       <p>Dataset name</p>
       <input type="text" className="datasetName" placeholder="Required" defaultValue={params.name} onKeyUp={(e) => params.onNameChange(e.target.value)}></input>
@@ -126,24 +131,24 @@ const enterMetadata = (params) => {
         <li className="addLabel" onClick={() => params.onLabelAdd()}><span className="icon iconAdd" />Add label</li>
       </ul>
 
-      <p>Multiple selection of labels allowed</p>
+      {/* <p>Multiple selection of labels allowed</p>
       <div className="multipleLabels">
         <span className="clickArea" onClick={() => params.onMultipleLabelsToggle()}>
           <span className={params.multipleLabels ? `icon iconToggleOn` : `icon iconToggleOff`} />
         </span>
-      </div>
+      </div> */}
 
       <p>Number of user labellings required per datapoint</p>
       <input type="number" className="numUserLabels" placeholder="0" min="1" max="10" defaultValue={params.numLabellingsRequired} onKeyUp={(e) => params.onnumLabellingsRequiredChange(e.target.value)} onChange={(e) => params.onnumLabellingsRequiredChange(e.target.value)}></input>
 
-      {
-        params.id ?
-        ''
-        :
-          <div className="buttonBar">
+      <div className="buttonBar">
+        {
+          params.id ?
+            <button onClick={() => params.onSubmit()}>Update dataset</button>
+          :
             <button onClick={() => params.onSubmit()}>Create dataset</button>
-          </div>
-      }
+        }
+      </div>
     </div>
   )
 }

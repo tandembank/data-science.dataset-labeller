@@ -24,7 +24,8 @@ const Datasets = params => (
             numLabellingsRequired={dataset.numLabellingsRequired}
             numTotalLabellingsRequired={dataset.numTotalLabellingsRequired}
             numLabellingsCompleted={dataset.numLabellingsCompleted}
-            numDatapoints={dataset.numDatapoints} />
+            numDatapoints={dataset.numDatapoints}
+            onEdit={params.onEdit} />
         }
         else {
           return <DatasetContainer
@@ -43,7 +44,8 @@ const Datasets = params => (
         }
       })
     }
-    <AddDatasetContainer />
+    <AddDatasetContainer
+      onEdit={params.onEdit} />
   </div>
 )
 

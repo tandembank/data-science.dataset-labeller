@@ -38,7 +38,7 @@ export default class AddDatasetContainer extends React.Component {
         this.setState({csrftoken: responseBody.csrftoken})
       }
       else {
-        throw new Error('Post Failed')
+        throw new Error('Request Failed')
       }
     }
     catch(error) {
@@ -85,7 +85,12 @@ export default class AddDatasetContainer extends React.Component {
   }
 
   onClose = () => {
-    this.reset()
+    if (this.state.id) {
+      this.props.onEdit(null)
+    }
+    else {
+      this.reset()
+    }
   }
 
   onStart = () => {
@@ -262,6 +267,9 @@ export default class AddDatasetContainer extends React.Component {
     let formData = new FormData()
     formData.append('data', JSON.stringify(requestData))
     formData.append('csrfmiddlewaretoken', this.state.csrftoken)
+    if (this.state.id) {
+      formData.append('id', this.state.id)
+    }
 
     this.setState({
       saving: true,
@@ -274,8 +282,10 @@ export default class AddDatasetContainer extends React.Component {
       })
       if (response.ok) {
         const responseBody = await response.json()
-        console.log(responseBody)
-        this.reset()
+        this.props.onEdit(null)
+        if (!this.state.id) {
+          this.reset()
+        }
       }
       else {
         throw new Error('Post Failed')
