@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import csv
 from datetime import timedelta
 from io import StringIO
@@ -205,3 +206,27 @@ def csv_upload(request):
             'temp_path':        temp_path,
         }
     return JsonResponse(data)
+
+
+@login_required
+def csv_download(request, dataset_id):
+    dataset = Dataset.objects.get(id=dataset_id)
+    fields = json.loads(dataset.fields)
+
+    fp = StringIO()
+    ordered_fieldnames = [(fieldname, None) for fieldname in fields]
+    ordered_fieldnames.append(('Label', None))
+    ordered_fieldnames = OrderedDict(ordered_fieldnames)
+    dw = csv.DictWriter(fp, delimiter=',', fieldnames=ordered_fieldnames)
+    dw.writeheader()
+
+    for datapoint in dataset.datapoints.all():
+        data = json.loads(datapoint.data)
+        data['Label'] = datapoint.label_determined()
+        dw.writerow(data)
+
+    response = HttpResponse(fp.getvalue(), content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename={}.csv'.format(dataset.name)
+    response['Content-Language'] = 'en'
+    response['Content-Length'] = fp.tell()
+    return response

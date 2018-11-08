@@ -28,7 +28,7 @@ const Dataset = params => (
     </div>
     <div className="controls">
       <span className="icon iconEdit" title="Edit" onClick={() => params.onEdit(params.id)} />
-      <span className="icon iconDownload" title="Download" />
+      <a href={`/api/csv-download/` + params.id + `/`}><span className="icon iconDownload" title="Download" /></a>
       <Link to={"/label/" + params.id}>
         <span className="icon iconLabel" title="Label data" />
       </Link>

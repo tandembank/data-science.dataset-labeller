@@ -12,5 +12,6 @@ urlpatterns = [
     path('api/datapoints/<str:dataset_id>/', views.datapoints, name='datapoints'),
     path('api/assign-label/<str:datapoint_id>/', views.assign_label, name='assign_label'),
     path('api/csv-upload/', views.csv_upload, name='csv-upload'),
+    path('api/csv-download/<str:dataset_id>/', views.csv_download, name='csv-download'),
     path('api/', views.index, name='index'),
 ]
