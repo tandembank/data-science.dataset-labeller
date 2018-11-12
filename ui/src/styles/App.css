@@ -1,5 +1,9 @@
 .App {
   font-size: 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .App-logo {
@@ -8,12 +12,11 @@
 }
 
 .App-content {
-  min-height: 100vh;
   align-items: center;
   justify-content: center;
   color: white;
-  width: 750px;
-  margin: 80px auto;
+  padding: 40px;
+  flex: 1;
 }
 
 .App-link {

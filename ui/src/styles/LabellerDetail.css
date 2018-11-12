@@ -1,7 +1,10 @@
 .LabellerDetail {
-  margin-bottom: 40px;
   justify-content: center;
   align-items: center;
+  height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .LabellerDetail .undo {
@@ -30,6 +33,7 @@
   padding: 40px 40px 20px;
   margin-bottom: 40px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  width: 750px;
 }
 .LabellerDetail .card div {
   margin-bottom: 20px;
