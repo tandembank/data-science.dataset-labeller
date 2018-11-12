@@ -68,7 +68,7 @@ export default class LabellerContainer extends React.Component {
           }
         }
         this.setState({
-          datapoints: responseBody.datapoints,
+          datapoints: newDatapoints,
           currentDatapoint: responseBody.datapoints[0],
         })
       }

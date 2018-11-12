@@ -136,7 +136,7 @@ def labels(request, dataset_id):
 def datapoints(request, dataset_id, limit=5):
     dataset = Dataset.objects.get(id=dataset_id)
     result_datapoints = []
-    for datapoint in dataset.datapoints_for_user(request.user)[:limit]:
+    for datapoint in dataset.datapoints_for_user(request.user, limit=limit):
         datapoint_data = json.loads(datapoint.data)
         features = []
         for fieldname in json.loads(dataset.display_fields):

@@ -227,7 +227,7 @@ export default class AddDatasetContainer extends React.Component {
     })
   }
 
-  onnumLabellingsRequiredChange = (num) => {
+  onNumLabellingsRequiredChange = (num) => {
     this.setState({
       numLabellingsRequired: num ? parseInt(num, 10) : undefined,
     })
@@ -281,7 +281,6 @@ export default class AddDatasetContainer extends React.Component {
         body: formData,
       })
       if (response.ok) {
-        const responseBody = await response.json()
         this.props.onEdit(null)
         if (!this.state.id) {
           this.reset()
@@ -320,7 +319,7 @@ export default class AddDatasetContainer extends React.Component {
       onLabelDelete={this.onLabelDelete}
       multipleLabels={this.state.multipleLabels}
       onMultipleLabelsToggle={this.onMultipleLabelsToggle}
-      onnumLabellingsRequiredChange={this.onnumLabellingsRequiredChange}
+      onNumLabellingsRequiredChange={this.onNumLabellingsRequiredChange}
       onSubmit={this.onSubmit}
     />
   }

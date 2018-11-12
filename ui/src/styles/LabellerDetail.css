@@ -19,7 +19,8 @@
 
 .LabellerDetail .iconUndo {
   mask-image: url(../images/undo.svg);
-  margin-right: 10px
+  margin-right: 10px;
+  vertical-align: middle;
 }
 
 .LabellerDetail .card {

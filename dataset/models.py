@@ -1,3 +1,4 @@
+from datetime import timedelta
 import json
 import operator
 import uuid
@@ -83,16 +84,33 @@ class Dataset(UUIDModel, VersionedModel):
     def labelling_complete(self):
         return self.num_labellings_completed / self.num_total_labellings_required
 
-    def datapoints_for_user(self, user):
+    def datapoints_for_user(self, user, limit=3):
+        # Remove any old locked Datapoints that Users might have claims and not completed
+        UserDatapointClaim.objects.clear_expired()
+
+        # Get (and return) Datapoints that were previously claimed by the User
+        claimed_datapoints = list(self.datapoints.filter(user_claims__user=user)[:limit])
+        if len(claimed_datapoints) >= limit:
+            return claimed_datapoints
+
         # Gets the remaining Datapoints that are available to be labelled by a user (excluding ones the user has already labelled or have enough labels to cover num_labellings_required)
-        datapoints = self.datapoints \
+        limit_new = limit - len(claimed_datapoints)
+        new_datapoints = self.datapoints \
+            .filter(user_claims__isnull=True) \
             .exclude(user_labels__user=user) \
             .annotate(count=Count('user_labels')) \
-            .filter(count__lt=self.num_labellings_required)
-        return datapoints
+            .filter(count__lt=self.num_labellings_required)[:limit_new]
+        new_datapoints = list(new_datapoints[:limit_new])
+
+        # Create locks on the User's claimed Datapoints
+        for new_datapoint in new_datapoints:
+            UserDatapointClaim.objects.get_or_create(user=user, datapoint=new_datapoint)
+
+        return claimed_datapoints + new_datapoints
 
 
 class Datapoint(UUIDModel, VersionedModel):
+    # Represents a row of a Dataset and is presented for Labelling
     dataset = models.ForeignKey(Dataset, on_delete='CASCADE', related_name='datapoints')
     index   = models.IntegerField()
     data    = models.TextField()
@@ -129,6 +147,7 @@ class Datapoint(UUIDModel, VersionedModel):
 
 
 class Label(UUIDModel, VersionedModel):
+    # The possible Labels that can be used for a Dataset
     dataset     = models.ForeignKey(Dataset, on_delete='CASCADE', related_name='labels')
     name        = models.CharField(max_length=200)
     shortcut    = models.CharField(max_length=10)
@@ -144,9 +163,28 @@ class Label(UUIDModel, VersionedModel):
 
 
 class UserLabel(UUIDModel, VersionedModel):
+    # Represents that a User has Labelled a Datapoint
     user        = models.ForeignKey(User, on_delete='CASCADE')
     datapoint   = models.ForeignKey(Datapoint, on_delete='CASCADE', related_name='user_labels')
     label       = models.ForeignKey(Label, on_delete='CASCADE')
 
     def __str__(self):
         return '{}: {}: {}'.format(self.user.username, self.label, self.datapoint)
+
+
+class UserDatapointClaimManager(models.Manager):
+    def clear_expired(self):
+        self.filter(created_at__lt=timezone.now()-timedelta(seconds=3600)).delete()
+        for claim in self.all():
+            if UserLabel.objects.filter(datapoint=claim.datapoint, user=claim.user).count() > 0:
+                claim.delete()
+
+
+class UserDatapointClaim(UUIDModel, VersionedModel):
+    # Prevents users trying to assign UserLabels to a Datapoint where there are more users working at a time than Dataset.num_labellings_required
+    user        = models.ForeignKey(User, on_delete='CASCADE')
+    datapoint   = models.ForeignKey(Datapoint, on_delete='CASCADE', related_name='user_claims')
+    objects     = UserDatapointClaimManager()
+
+    def __str__(self):
+        return '{}: {}'.format(self.user.username, self.datapoint.id)

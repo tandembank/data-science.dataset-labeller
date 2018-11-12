@@ -1,5 +1,7 @@
 import json
+import uuid
 
+from django.contrib.auth.models import User
 import pytest
 
 from dataset.models import Dataset, Datapoint, Label, UserLabel
@@ -35,7 +37,8 @@ FRUIT_DATA = [
 @pytest.fixture
 def fruit_dataset():
     def create_fruit_dataset():
-        ds = Dataset.objects.create_from_list('Fruit', FRUIT_DATA)
+        admin_user, _ = User.objects.get_or_create(username='admin')
+        ds = Dataset.objects.create_from_list('Fruit', FRUIT_DATA, created_by=admin_user)
         for label in FRUIT_LABELS:
             Label.objects.create(dataset=ds, name=label)
         return ds
@@ -49,7 +52,7 @@ def test_dataset_creation(fruit_dataset):
     # Datapoints should have been added for the dataset through the create_from_list() call
     assert ds.datapoints.count() == 3
     assert json.loads(ds.datapoints.all()[0].data)['color'] == 'green'
-    assert ds.labelling_complete() == 0
+    assert ds.labelling_complete == 0
 
     # Labels should have been created
     labels = Label.objects.filter(dataset=ds)
@@ -67,10 +70,10 @@ def test_user_label_percent(fruit_dataset, django_user_model):
 
     # Adding user labels should increase the labelling_complete() of the dataset
     UserLabel.objects.create(user=user1, datapoint=datapoints[0], label=label_apple).save()
-    assert ds.labelling_complete() == 0.1111111111111111
+    assert ds.labelling_complete == 0.1111111111111111
     UserLabel.objects.create(user=user1, datapoint=datapoints[1], label=label_orange).save()
     UserLabel.objects.create(user=user1, datapoint=datapoints[2], label=label_apple).save()
-    assert ds.labelling_complete() == 0.3333333333333333
+    assert ds.labelling_complete == 0.3333333333333333
 
 
 @pytest.mark.django_db()
@@ -86,26 +89,44 @@ def test_user_label_datapoints(fruit_dataset, django_user_model):
 
     # user1 creates labels for all 3 datapoints in the set and end up with an empty set
     datapoints = ds.datapoints_for_user(user1)
-    assert datapoints.count() == 3
+    assert len(datapoints) == 3
     UserLabel.objects.create(user=user1, datapoint=datapoints[0], label=label_apple)
     datapoints = ds.datapoints_for_user(user1)
-    assert datapoints.count() == 2
+    assert len(datapoints) == 2
     UserLabel.objects.create(user=user1, datapoint=datapoints[0], label=label_apple)
     datapoints = ds.datapoints_for_user(user1)
-    assert datapoints.count() == 1
+    assert len(datapoints) == 1
     UserLabel.objects.create(user=user1, datapoint=datapoints[0], label=label_apple)
     datapoints = ds.datapoints_for_user(user1)
-    assert datapoints.count() == 0
+    assert len(datapoints) == 0
     # user2 has available tasks though
     datapoints = ds.datapoints_for_user(user2)
-    assert datapoints.count() == 3
-    # There are only 2 num_labellings_required so users 2 & 3 are competing now
+    assert len(datapoints) == 3
+    # There are only 2 num_labellings_required so users 2 & 3 are competing
     UserLabel.objects.create(user=user2, datapoint=datapoints[0], label=label_apple)
     datapoints = ds.datapoints_for_user(user3)
-    assert datapoints.count() == 2
-    UserLabel.objects.create(user=user3, datapoint=datapoints[0], label=label_apple)
+    assert len(datapoints) == 0
     datapoints = ds.datapoints_for_user(user2)
-    assert datapoints.count() == 1
+    assert len(datapoints) == 2
+
+
+@pytest.mark.django_db()
+def test_user_label_datapoints_interlacing(fruit_dataset, django_user_model):
+    ds = fruit_dataset()
+    ds.num_labellings_required = 2
+    ds.save()
+    user1 = django_user_model.objects.create(username='user1', password='secret')
+    user2 = django_user_model.objects.create(username='user2', password='secret')
+
+    # user1 gets datapoints
+    u1_datapoints = ds.datapoints_for_user(user1, 2)
+    assert len(u1_datapoints) == 2
+    assert [json.loads(fruit.data)['color'] for fruit in u1_datapoints] == ['green', 'orange']
+
+    # user2's datapoints should not include user1's
+    u2_datapoints = ds.datapoints_for_user(user2, 2)
+    assert len(u2_datapoints) == 1
+    assert [json.loads(fruit.data)['color'] for fruit in u2_datapoints] == ['red']
 
 
 @pytest.mark.django_db()
