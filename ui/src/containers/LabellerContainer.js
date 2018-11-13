@@ -11,6 +11,8 @@ export default class LabellerContainer extends React.Component {
       datapoints: [],
       currentDatapoint: null,
       previousDatapoint: null,
+      loadedLabels: false,
+      loadedDatapoints: false,
     }
     this.NUMPAD_MAPPING = {
       a: '1',
@@ -44,6 +46,7 @@ export default class LabellerContainer extends React.Component {
         const responseBody = await response.json()
         this.setState({
           labels: responseBody.labels,
+          loadedLabels: true,
         })
       }
       else {
@@ -70,6 +73,7 @@ export default class LabellerContainer extends React.Component {
         this.setState({
           datapoints: newDatapoints,
           currentDatapoint: responseBody.datapoints[0],
+          loadedDatapoints: true,
         })
       }
       else {
@@ -129,7 +133,7 @@ export default class LabellerContainer extends React.Component {
     let label = null
 
     // Undo if backspace is pressed
-    if (e.keyCode === 8) {
+    if (e.keyCode === 8 && this.state.previousDatapoint) {
       this.onUndo()
     }
 
@@ -165,16 +169,14 @@ export default class LabellerContainer extends React.Component {
   }
 
   render() {
-    if (this.state.currentDatapoint && this.state.labels) {
-      return <Labeller
-        datasetId={this.state.datasetId}
-        datapoint={this.state.currentDatapoint}
-        labels={this.state.labels}
-        onSelectLabel={this.onSelectLabel}
-        undoAvailable={this.state.previousDatapoint ? true : false}
-        onUndo={() => this.onUndo()}
-      />
-    }
-    return <span></span>
+    return <Labeller
+      datasetId={this.state.datasetId}
+      datapoint={this.state.currentDatapoint}
+      labels={this.state.labels}
+      onSelectLabel={this.onSelectLabel}
+      undoAvailable={this.state.previousDatapoint ? true : false}
+      loaded={this.state.loadedLabels && this.state.loadedDatapoints}
+      onUndo={() => this.onUndo()}
+    />
   }
 }

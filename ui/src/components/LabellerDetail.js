@@ -41,7 +41,6 @@ export default class LabellerDetail extends React.Component {
         <ul className="options">
           {
             params.labels.map((label) => {
-              console.log(params.datapointId)
               return (
                 // <li key={label.name} onClick={() => params.onSelectLabel(params.datapointId, label.id)}>
                 <li key={label.name} onClick={() => this.onSelect(params.datapointId, label.id)}>
