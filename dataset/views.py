@@ -189,8 +189,8 @@ def assign_label(request, datapoint_id):
 def csv_upload(request):
     # Read and detect CSV format
     file = request.FILES['file']
-    fp = StringIO(file.read().decode('utf-8'))
-    dialect = csv.Sniffer().sniff(fp.read(1024))
+    fp = StringIO(file.read().decode('utf-8-sig'))
+    dialect = csv.Sniffer().sniff(fp.read(1024).split('\n')[0])
 
     # Extract column names
     fp.seek(0)
