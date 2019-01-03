@@ -7,7 +7,7 @@ import tempfile
 from time import sleep
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
 from django.middleware.csrf import get_token
 from django.shortcuts import render
 from django.utils import timezone
@@ -238,22 +238,38 @@ def csv_upload(request):
 @login_required
 def csv_download(request, dataset_id):
     dataset = Dataset.objects.get(id=dataset_id)
-    fields = json.loads(dataset.fields)
+    response = StreamingHttpResponse(streaming_csv_generator(dataset), content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(dataset.name)
+    response['Content-Language'] = 'en'
+    return response
 
+
+def streaming_csv_generator(dataset):
+    # Generator for streaming the CSV file in chunks
+
+    # Write CSV header to buffer
     fp = StringIO()
+    fields = json.loads(dataset.fields)
     ordered_fieldnames = [(fieldname, None) for fieldname in fields]
     ordered_fieldnames.append(('Label', None))
     ordered_fieldnames = OrderedDict(ordered_fieldnames)
     dw = csv.DictWriter(fp, delimiter=',', fieldnames=ordered_fieldnames)
     dw.writeheader()
 
+    # Write rows of Datapoints to buffer
     for datapoint in dataset.datapoints.all():
         data = json.loads(datapoint.data)
         data['Label'] = datapoint.label_determined()
         dw.writerow(data)
 
-    response = HttpResponse(fp.getvalue(), content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename={}.csv'.format(dataset.name)
-    response['Content-Language'] = 'en'
-    response['Content-Length'] = fp.tell()
-    return response
+        if fp.tell() > 4096:
+            # Buffer has reached 4KB so reset it and yield it's contents
+            fp.seek(0)
+            content = fp.read()
+            fp.seek(0)
+            fp.truncate()
+            yield content
+
+    # Yeild the remainder of the buffer
+    fp.seek(0)
+    yield fp.read()
