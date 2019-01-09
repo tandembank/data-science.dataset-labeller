@@ -1,5 +1,7 @@
 # Dataset labeller
 
+![](https://img.shields.io/travis/tandembank/data-science.dataset-labeller.svg) ![](https://img.shields.io/codecov/c/gh/tandembank/data-science.dataset-labeller.svg) ![](https://img.shields.io/github/license/tandembank/data-science.dataset-labeller.svg) ![](https://img.shields.io/github/last-commit/tandembank/data-science.dataset-labeller.svg)
+
 This is a web-based tool we developed to label datasets quickly at [Tandem](https://tandem.co.uk). It is based on Python, Django, React and run through Docker Compose.
 
 ![Creating a new dataset and starting to label](https://epixstudios.co.uk/uploads/filer_public/7f/62/7f62f0ad-9cf3-47ba-9ad6-79282f456c7f/dataset_labeller_demo.gif)
@@ -16,6 +18,7 @@ This is the process for labelling a new dataset:
   7. Download the labelled dataset as a CSV -- it'll have an extra column with the labels
 
 ## Features
+
   * Import and export data in the format that you're comfortable with -- no need to pre-process data, just select the columns to display for labelling.
   * Each user has their own account so you can see who labelled what.
   * Labellers can access the tool remotely or within a corporate network using just their web browser.
@@ -24,4 +27,3 @@ This is the process for labelling a new dataset:
   * If some datapoints are tricky to label or your team are going at break-neck speed you can choose to get a consensus from an odd number of users, say 3 or 5.
   * Database included and configured in the Docker Compose file.
   * Cell content such as JSON lists gets displayed nicely formatted. We aim to extend this to identify other formats and image URLs.
-  
