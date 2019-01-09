@@ -9,6 +9,7 @@ pytest = "==3.8.2"
 pytest-django = "==3.4.3"
 gunicorn = "==19.9.0"
 mysqlclient = "==1.3.13"
+codecov = "*"
 
 [dev-packages]
 

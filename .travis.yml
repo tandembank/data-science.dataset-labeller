@@ -4,4 +4,4 @@ python:
 install:
   - pip install pipenv && pipenv install --system
 script:
-  - python test.py
+  - coverage run test.py
