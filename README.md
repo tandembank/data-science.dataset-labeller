@@ -1,6 +1,6 @@
 # Dataset labeller
 
-![](https://img.shields.io/travis/tandembank/data-science.dataset-labeller.svg) ![](https://img.shields.io/codecov/c/gh/tandembank/data-science.dataset-labeller.svg) ![](https://img.shields.io/github/license/tandembank/data-science.dataset-labeller.svg) ![](https://img.shields.io/github/last-commit/tandembank/data-science.dataset-labeller.svg)
+![https://travis-ci.org/tandembank/data-science.dataset-labeller](https://img.shields.io/travis/tandembank/data-science.dataset-labeller.svg) ![https://codecov.io/gh/tandembank/data-science.dataset-labeller](https://img.shields.io/codecov/c/gh/tandembank/data-science.dataset-labeller.svg) ![https://github.com/tandembank/data-science.dataset-labeller/blob/master/LICENSE](https://img.shields.io/github/license/tandembank/data-science.dataset-labeller.svg)
 
 This is a web-based tool we developed to label datasets quickly at [Tandem](https://tandem.co.uk). It is based on Python, Django, React and run through Docker Compose.
 
